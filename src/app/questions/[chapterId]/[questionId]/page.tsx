@@ -10,14 +10,16 @@ interface QuestionPageProps {
     };
 }
 
-export default function QuestionPage({ params }: QuestionPageProps) {
-    const chapter = interviewData.chapters.find(c => c.id === params.chapterId);
+export default async function QuestionPage({ params }: QuestionPageProps) {
+
+    const { chapterId, questionId } = await params;
+    const chapter = interviewData.chapters.find(c => c.id === chapterId);
     if (!chapter) notFound();
 
-    const question = chapter.questions.find(q => q.id === params.questionId);
+    const question = chapter.questions.find(q => q.id === questionId);
     if (!question) notFound();
 
-    const currentIndex = chapter.questions.findIndex(q => q.id === params.questionId);
+    const currentIndex = chapter.questions.findIndex(q => q.id === questionId);
     const prevQuestion = currentIndex > 0 ? chapter.questions[currentIndex - 1] : null;
     const nextQuestion = currentIndex < chapter.questions.length - 1 ? chapter.questions[currentIndex + 1] : null;
 
@@ -48,7 +50,7 @@ export default function QuestionPage({ params }: QuestionPageProps) {
             <div className="mt-8 flex justify-between">
                 {prevQuestion && (
                     <Link
-                        href={`/questions/${params.chapterId}/${prevQuestion.id}`}
+                        href={`/questions/${chapterId}/${prevQuestion.id}`}
                         className="text-blue-500 hover:underline"
                     >
                         ← Previous: {prevQuestion.title}
@@ -56,7 +58,7 @@ export default function QuestionPage({ params }: QuestionPageProps) {
                 )}
                 {nextQuestion && (
                     <Link
-                        href={`/questions/${params.chapterId}/${nextQuestion.id}`}
+                        href={`/questions/${chapterId}/${nextQuestion.id}`}
                         className="text-blue-500 hover:underline"
                     >
                         Next: {nextQuestion.title} →
