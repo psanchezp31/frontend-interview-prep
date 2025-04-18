@@ -2412,6 +2412,1150 @@ app.get('/api/mobile/user-profile', async (req, res) => {
 });`,
           },
         },
+        {
+          id: "node-6",
+          title:
+            "6. What are the key differences between Node.js and Javascript?",
+          answer: {
+            text: `
+            Concept       | JavaScript (Browser)            | Node.js
+            Engine        | V8 (in Chrome, also in Node)    | V8
+            Environment   | Browser APIs (DOM, fetch)       | Node APIs (fs, http, streams)
+            Event Loop    | Yes                             | Yes
+            Web APIs      | Yes (setTimeout, fetch)         | No (uses libuv instead)
+            Async I/O     | Browser handles it              | Uses libuv for non-blocking I/O
+            Global Object | window                          | global
+
+1. Call Stack
+Same in both. It's how JS keeps track of function calls.
+
+2. Event Loop
+Same in both. It's how JS handles asynchronous operations.
+
+3. Web APIs
+ In the Browser:
+setTimeout, fetch, DOM events, etc. are powered by Web APIs (not JS itself).
+
+In Node.js:
+No Web APIs.
+Instead, Node uses libuv, a C++ library that provides an event loop, async I/O, timers, etc.
+
+4. Microtasks vs Macrotasks
+Both environments handle microtasks (like Promise.then() or process.nextTick()) before the next macrotask (like setTimeout()).
+
+But Node adds more complexity:
+
+Task Type       | Browser                         | Node.js
+Microtask Queue | Promise.then, MutationObserver  | Promise.then, process.nextTick
+Macrotask Queue | setTimeout, setInterval         | setTimeout, setImmediate, I/O callbacks
+
+In Node, process.nextTick() is even faster than Promises.
+
+5. Timers
+In the browser:
+
+setTimeout(() => {}, 0); // waits for call stack to clear
+
+In Node:
+
+setTimeout(() => {}, 0);      // macrotask (timers phase)
+setImmediate(() => {});       // macrotask (check phase)
+process.nextTick(() => {});   // microtask (before next loop tick)
+
+TL;DR
+
+JavaScript's core engine behavior (call stack, event loop) is the same everywhere.
+
+What differs is the environment: browsers vs Node.js offer different APIs, and Node adds some extra layers (like process.nextTick, setImmediate, libuv).
+
+Both rely on the event loop, but what's inside that loop and how tasks are queued can differ.
+
+            `,
+            example: ``,
+          },
+        },
+      ],
+    },
+    {
+      id: "html",
+      title: "HTML",
+      questions: [
+        {
+          id: "html-1",
+          title: "1. What is DOCTYPE in HTML?",
+          answer: {
+            text: `The DOCTYPE declaration is the first line of code required in every HTML or XHTML document. It tells the web browser what version of HTML the page is written in.
+
+Key points:
+- Must be the first line in HTML documents
+- Not case sensitive
+- Tells browser how to render the page
+- Different DOCTYPEs for different HTML versions
+- HTML5 uses the simplest DOCTYPE`,
+            example: `<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Page</title>
+    </head>
+    <body>
+        <h1>Hello World</h1>
+    </body>
+</html>`,
+          },
+        },
+        {
+          id: "html-2",
+          title: "2. What are semantic elements in HTML5?",
+          answer: {
+            text: `Semantic elements clearly describe their meaning to both the browser and the developer. They make the code more readable and improve accessibility.
+
+Common semantic elements:
+- <header>: Introductory content
+- <nav>: Navigation links
+- <main>: Main content
+- <article>: Self-contained content
+- <section>: Thematic grouping
+- <aside>: Side content
+- <footer>: Footer content
+- <figure>: Self-contained content with caption
+- <figcaption>: Caption for figure
+- <time>: Date/time
+- <mark>: Highlighted text`,
+            example: `<header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <article>
+        <h1>Article Title</h1>
+        <section>
+            <h2>Section Title</h2>
+            <p>Content goes here...</p>
+        </section>
+    </article>
+
+    <aside>
+        <h3>Related Content</h3>
+        <p>Sidebar content...</p>
+    </aside>
+</main>
+
+<footer>
+    <p>Copyright © 2023</p>
+</footer>`,
+          },
+        },
+        {
+          id: "html-3",
+          title: "3. What is accessibility in HTML?",
+          answer: {
+            text: `Accessibility (a11y) is the practice of making websites usable by as many people as possible. HTML provides several features to improve accessibility.
+
+Key accessibility features:
+- Semantic HTML elements
+- ARIA attributes
+- Proper heading structure
+- Alt text for images
+- Form labels and descriptions
+- Keyboard navigation
+- Color contrast
+- Screen reader compatibility`,
+            example: `<!-- Semantic structure -->
+<nav aria-label="Main navigation">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+</nav>
+
+<!-- Form accessibility -->
+<form>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required
+           aria-describedby="name-help">
+    <span id="name-help">Enter your full name</span>
+
+    <button type="submit">Submit</button>
+</form>
+
+<!-- Image accessibility -->
+<img src="logo.png" alt="Company Logo"
+     width="200" height="100">
+
+<!-- ARIA roles -->
+<div role="alert" aria-live="assertive">
+    Important message!
+</div>`,
+          },
+        },
+        {
+          id: "html-4",
+          title: "4. What are meta tags in HTML?",
+          answer: {
+            text: `Meta tags provide metadata about the HTML document. They are placed in the head section and are not displayed on the page.
+
+Common meta tags:
+- charset: Character encoding
+- viewport: Mobile device settings
+- description: Page description
+- keywords: Search keywords
+- author: Page author
+- robots: Search engine instructions
+- refresh: Page refresh
+- social media: Open Graph tags`,
+            example: `<head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8">
+    
+    <!-- Viewport settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Page description -->
+    <meta name="description" content="Free Web tutorials">
+    
+    <!-- Keywords -->
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    
+    <!-- Author -->
+    <meta name="author" content="John Doe">
+    
+    <!-- Refresh page -->
+    <meta http-equiv="refresh" content="30">
+    
+    <!-- Social media -->
+    <meta property="og:title" content="My Page">
+    <meta property="og:description" content="Description">
+    <meta property="og:image" content="image.jpg">
+    
+    <!-- Robots -->
+    <meta name="robots" content="index, follow">
+</head>`,
+          },
+        },
+        {
+          id: "html-5",
+          title:
+            "5. What are the most important HTML5 tags and their purposes?",
+          answer: {
+            text: `HTML5 introduced many new tags that improve semantics and functionality. Here are some of the most important ones:
+
+1. Structural Tags:
+- <header>: Contains introductory content
+- <nav>: Navigation links
+- <main>: Main content area
+- <article>: Self-contained content
+- <section>: Thematic grouping
+- <aside>: Side content
+- <footer>: Footer content
+
+2. Media Tags:
+- <video>: Embeds video content
+- <audio>: Embeds audio content
+- <canvas>: Drawing graphics
+- <svg>: Scalable Vector Graphics
+- <picture>: Responsive images
+- <source>: Multiple media sources
+
+3. Form Tags:
+- <input>: Various input types
+- <datalist>: Predefined options
+- <output>: Calculation results
+- <meter>: Scalar measurement
+- <progress>: Progress indicator
+
+4. Semantic Tags:
+- <time>: Date/time
+- <mark>: Highlighted text
+- <figure>: Self-contained content
+- <figcaption>: Figure caption
+- <details>: Additional details
+- <summary>: Details summary
+
+5. Interactive Tags:
+- <dialog>: Dialog box
+- <menu>: Command menu
+- <menuitem>: Menu items
+- <template>: Content template`,
+            example: `<!-- Structural tags -->
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <article>
+        <h1>Article Title</h1>
+        <section>
+            <p>Content...</p>
+        </section>
+    </article>
+</main>
+
+<!-- Media tags -->
+<video controls>
+    <source src="video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<!-- Form tags -->
+<form>
+    <input list="browsers" name="browser">
+    <datalist id="browsers">
+        <option value="Chrome">
+        <option value="Firefox">
+    </datalist>
+</form>
+
+<!-- Semantic tags -->
+<time datetime="2023-01-01">January 1, 2023</time>
+<mark>Highlighted text</mark>`,
+          },
+        },
+        {
+          id: "html-6",
+          title: "6. How can you optimize HTML for SEO?",
+          answer: {
+            text: `Search Engine Optimization (SEO) in HTML involves several best practices to improve a website's visibility in search results.
+
+Key SEO practices:
+1. Semantic HTML:
+   - Use appropriate heading hierarchy
+   - Implement semantic elements
+   - Structure content logically
+   - Use descriptive tags
+
+2. Meta Tags:
+   - Title tag: Concise, descriptive
+   - Meta description: Compelling summary
+   - Meta keywords: Relevant terms
+   - Robots meta tag: Indexing control
+   - Canonical tag: Prevent duplicate content
+
+3. Content Structure:
+   - Clear heading hierarchy
+   - Proper paragraph structure
+   - Meaningful link text
+   - Alt text for images
+   - Schema markup
+
+4. Technical SEO:
+   - Mobile responsiveness
+   - Fast loading times
+   - Clean URL structure
+   - XML sitemap
+   - Robots.txt
+
+5. Accessibility:
+   - ARIA attributes
+   - Keyboard navigation
+   - Screen reader compatibility
+   - Color contrast
+   - Text alternatives`,
+            example: `<!-- SEO-optimized HTML structure -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Web Development Practices | Your Site</title>
+    <meta name="description" content="Learn the best practices for web development, including HTML, CSS, and JavaScript tips and tricks.">
+    <meta name="keywords" content="web development, HTML, CSS, JavaScript, best practices">
+    <link rel="canonical" href="https://yoursite.com/web-development">
+</head>
+<body>
+    <header>
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <article>
+            <h1>Web Development Best Practices</h1>
+            <section>
+                <h2>HTML Structure</h2>
+                <p>Content about HTML structure...</p>
+                <img src="structure.png" alt="HTML document structure diagram" width="600" height="400">
+            </section>
+        </article>
+    </main>
+</body>
+</html>`,
+          },
+        },
+        {
+          id: "html-7",
+          title:
+            "7. What are the differences between block and inline elements in HTML?",
+          answer: {
+            text: `Block and inline elements are two fundamental types of HTML elements that behave differently in terms of layout and formatting.
+
+Block Elements:
+- Start on a new line
+- Take full width available
+- Can contain other block and inline elements
+- Can have margins and padding
+- Examples: <div>, <p>, <h1>-<h6>, <section>, <article>
+
+Inline Elements:
+- Do not start on a new line
+- Take only necessary width
+- Can only contain other inline elements
+- Cannot have top/bottom margins
+- Examples: <span>, <a>, <strong>, <em>, <img>
+
+Key differences:
+1. Layout:
+   - Block: New line, full width
+   - Inline: Same line, content width
+
+2. Content:
+   - Block: Can contain both types
+   - Inline: Can only contain inline
+
+3. Box Model:
+   - Block: Full box model support
+   - Inline: Limited box model
+
+4. Default Display:
+   - Block: display: block
+   - Inline: display: inline
+
+5. Common Uses:
+   - Block: Structure, layout
+   - Inline: Text formatting, links`,
+            example: `<!-- Block elements -->
+<div>
+    <p>This is a paragraph inside a div.</p>
+    <section>
+        <h2>Section Title</h2>
+        <p>Section content...</p>
+    </section>
+</div>
+
+<!-- Inline elements -->
+<p>
+    This is <strong>bold text</strong> and this is <em>italic text</em>.
+    Here's a <a href="#">link</a> and an <img src="icon.png" alt="icon">.
+</p>
+
+<!-- Mixed usage -->
+<div>
+    <p>This is a <span>span element</span> inside a paragraph.</p>
+    <a href="#"><img src="button.png" alt="button"></a>
+</div>`,
+          },
+        },
+        {
+          id: "html-8",
+          title: "8. What are HTML forms and how do they work?",
+          answer: {
+            text: `HTML forms are used to collect user input and send it to a server for processing. They are essential for user interaction on the web.
+
+Form Components:
+1. Form Element:
+   - <form>: Container for form elements
+   - action: URL to send data
+   - method: HTTP method (GET/POST)
+   - enctype: Encoding type
+
+2. Input Elements:
+   - <input>: Various input types
+   - <textarea>: Multi-line text
+   - <select>: Dropdown list
+   - <button>: Form submission
+   - <label>: Input description
+
+3. Input Types:
+   - text: Single-line text
+   - password: Masked text
+   - email: Email address
+   - number: Numeric input
+   - date: Date picker
+   - checkbox: Multiple selection
+   - radio: Single selection
+   - file: File upload
+   - submit: Form submission
+
+4. Form Validation:
+   - required: Mandatory field
+   - pattern: Regex validation
+   - min/max: Range validation
+   - maxlength: Character limit
+   - type: Input type validation`,
+            example: `<!-- Basic form -->
+<form action="/submit" method="POST" enctype="multipart/form-data">
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <div>
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+    </div>
+
+    <div>
+        <label for="country">Country:</label>
+        <select id="country" name="country">
+            <option value="us">United States</option>
+            <option value="uk">United Kingdom</option>
+        </select>
+    </div>
+
+    <div>
+        <input type="checkbox" id="subscribe" name="subscribe">
+        <label for="subscribe">Subscribe to newsletter</label>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>`,
+          },
+        },
+      ],
+    },
+    {
+      id: "css",
+      title: "CSS",
+      questions: [
+        {
+          id: "css-1",
+          title: "1. What are CSS selectors and what are the different types?",
+          answer: {
+            text: `CSS selectors are patterns used to select and style HTML elements. They are fundamental to CSS and come in various types:
+
+1. Basic Selectors:
+- Element selector: Selects elements by tag name (e.g., p, div)
+- Class selector: Selects elements by class (e.g., .class)
+- ID selector: Selects elements by ID (e.g., #id)
+- Universal selector: Selects all elements (*)
+
+2. Combinator Selectors:
+- Descendant selector: Selects elements that are descendants (space)
+- Child selector: Selects direct children (>)
+- Adjacent sibling selector: Selects immediately following sibling (+)
+- General sibling selector: Selects all following siblings (~)
+
+3. Attribute Selectors:
+- [attr]: Elements with attribute
+- [attr=value]: Exact attribute value
+- [attr~=value]: Contains word
+- [attr|=value]: Starts with word
+- [attr^=value]: Starts with string
+- [attr$=value]: Ends with string
+- [attr*=value]: Contains string
+
+4. Specificity Rules:
+- Inline styles: 1000
+- ID selectors: 100
+- Class/attribute/pseudo-class: 10
+- Element/pseudo-element: 1`,
+            example: `/* Basic selectors */
+p { color: blue; }
+.class { font-weight: bold; }
+#id { background: red; }
+* { margin: 0; }
+
+/* Combinator selectors */
+div p { color: green; } /* Descendant */
+div > p { color: red; } /* Child */
+h2 + p { margin-top: 0; } /* Adjacent sibling */
+h2 ~ p { color: blue; } /* General sibling */
+
+/* Attribute selectors */
+[disabled] { opacity: 0.5; }
+[type="text"] { border: 1px solid; }
+[class~="warning"] { color: red; }
+[lang|="en"] { font-family: Arial; }
+[href^="https"] { color: green; }
+[src$=".jpg"] { border: 1px solid; }
+[title*="example"] { text-decoration: underline; }`,
+          },
+        },
+        {
+          id: "css-2",
+          title: "2. What are pseudo-elements and pseudo-classes in CSS?",
+          answer: {
+            text: `Pseudo-elements and pseudo-classes are special keywords that allow styling of specific parts or states of elements.
+
+Pseudo-elements (::):
+- ::before: Inserts content before element
+- ::after: Inserts content after element
+- ::first-line: Styles first line of text
+- ::first-letter: Styles first letter
+- ::selection: Styles selected text
+- ::placeholder: Styles input placeholder
+
+Pseudo-classes (:):
+1. State-based:
+   - :hover: Mouse over element
+   - :active: Element being activated
+   - :focus: Element has focus
+   - :visited: Visited link
+   - :checked: Checked input
+   - :disabled: Disabled element
+
+2. Position-based:
+   - :first-child: First child element
+   - :last-child: Last child element
+   - :nth-child(): Specific child position
+   - :only-child: Only child element
+   - :first-of-type: First of its type
+   - :last-of-type: Last of its type
+
+3. Form-related:
+   - :valid: Valid form input
+   - :invalid: Invalid form input
+   - :required: Required input
+   - :optional: Optional input
+   - :in-range: Value in range
+   - :out-of-range: Value out of range`,
+            example: `/* Pseudo-elements */
+p::before {
+    content: "Note: ";
+    font-weight: bold;
+}
+
+p::first-line {
+    font-weight: bold;
+}
+
+::selection {
+    background: yellow;
+}
+
+input::placeholder {
+    color: #999;
+}
+
+/* Pseudo-classes */
+a:hover {
+    color: red;
+}
+
+input:focus {
+    border-color: blue;
+}
+
+li:first-child {
+    font-weight: bold;
+}
+
+li:nth-child(odd) {
+    background: #f0f0f0;
+}
+
+input:valid {
+    border-color: green;
+}
+
+input:invalid {
+    border-color: red;
+}`,
+          },
+        },
+        {
+          id: "css-3",
+          title: "3. What are CSS preprocessors and what are their advantages?",
+          answer: {
+            text: `CSS preprocessors are scripting languages that extend CSS with features like variables, nesting, mixins, and functions, then compile into regular CSS.
+
+Popular Preprocessors:
+1. SASS/SCSS:
+   - Variables: $variable
+   - Nesting: Nested selectors
+   - Mixins: Reusable code blocks
+   - Functions: Custom functions
+   - Control directives: @if, @for, @each
+   - Partials: Modular CSS
+   - Import: Combine files
+
+2. LESS:
+   - Similar to SASS
+   - JavaScript-based
+   - Client-side compilation
+   - Simpler syntax
+
+3. Stylus:
+   - Flexible syntax
+   - No required brackets
+   - Built-in functions
+   - Mixins and variables
+
+Advantages:
+1. Maintainability:
+   - Modular code
+   - Reusable components
+   - Better organization
+   - Easier updates
+
+2. Productivity:
+   - Faster development
+   - Less repetition
+   - Better code structure
+   - Built-in functions
+
+3. Features:
+   - Variables
+   - Nesting
+   - Mixins
+   - Functions
+   - Math operations
+   - Color manipulation`,
+            example: `/* SCSS Example */
+// Variables
+$primary-color: #333;
+$font-stack: Helvetica, sans-serif;
+
+// Mixin
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
+// Nesting
+nav {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        display: inline-block;
+    }
+
+    a {
+        display: block;
+        padding: 6px 12px;
+        text-decoration: none;
+    }
+}
+
+// Function
+@function calculate-rem($size) {
+    $rem-size: $size / 16px;
+    @return #{$rem-size}rem;
+}
+
+// Usage
+body {
+    font: 100% $font-stack;
+    color: $primary-color;
+}
+
+.button {
+    @include border-radius(10px);
+    font-size: calculate-rem(16px);
+}`,
+          },
+        },
+        {
+          id: "css-4",
+          title: "4. What is Flexbox and how does it work?",
+          answer: {
+            text: `Flexbox (Flexible Box Layout) is a CSS layout model that provides an efficient way to lay out, align, and distribute space among items in a container.
+
+Key Concepts:
+1. Flex Container:
+   - display: flex
+   - flex-direction: row/column
+   - flex-wrap: wrap/nowrap
+   - justify-content: main axis alignment
+   - align-items: cross axis alignment
+   - align-content: multi-line alignment
+
+2. Flex Items:
+   - flex-grow: growth factor
+   - flex-shrink: shrink factor
+   - flex-basis: initial size
+   - order: display order
+   - align-self: individual alignment
+
+3. Main Properties:
+   - flex-direction: row/row-reverse/column/column-reverse
+   - justify-content: flex-start/flex-end/center/space-between/space-around
+   - align-items: flex-start/flex-end/center/stretch/baseline
+   - flex-wrap: nowrap/wrap/wrap-reverse
+   - flex-flow: shorthand for flex-direction and flex-wrap
+
+4. Common Use Cases:
+   - Centering elements
+   - Equal height columns
+   - Responsive navigation
+   - Card layouts
+   - Form layouts`,
+            example: `/* Flex Container */
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Flex Items */
+.item {
+    flex: 1 1 200px; /* grow shrink basis */
+    order: 1;
+}
+
+/* Common Layouts */
+/* Centering */
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Equal Height Columns */
+.columns {
+    display: flex;
+}
+
+.column {
+    flex: 1;
+}
+
+/* Responsive Navigation */
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.nav-item {
+    flex: 1 1 auto;
+}
+
+/* Card Layout */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.card {
+    flex: 1 1 300px;
+}`,
+          },
+        },
+        {
+          id: "css-5",
+          title: "5. What is CSS Grid and how does it differ from Flexbox?",
+          answer: {
+            text: `CSS Grid is a two-dimensional layout system that allows you to create complex layouts with rows and columns. It differs from Flexbox in several ways:
+
+Key Differences:
+1. Dimensionality:
+   - Grid: Two-dimensional (rows and columns)
+   - Flexbox: One-dimensional (row or column)
+
+2. Layout Approach:
+   - Grid: Explicit grid definition
+   - Flexbox: Content-based layout
+
+3. Control:
+   - Grid: Precise control over both dimensions
+   - Flexbox: Main axis control with limited cross-axis control
+
+Grid Features:
+1. Grid Container:
+   - display: grid
+   - grid-template-columns: Column sizes
+   - grid-template-rows: Row sizes
+   - grid-template-areas: Named areas
+   - gap: Spacing between items
+
+2. Grid Items:
+   - grid-column: Column placement
+   - grid-row: Row placement
+   - grid-area: Area placement
+   - justify-self: Horizontal alignment
+   - align-self: Vertical alignment
+
+3. Common Use Cases:
+   - Complex layouts
+   - Magazine-style layouts
+   - Dashboard layouts
+   - Image galleries
+   - Form layouts`,
+            example: `/* Grid Container */
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    gap: 1rem;
+    grid-template-areas:
+        "header header header"
+        "sidebar main main"
+        "footer footer footer";
+}
+
+/* Grid Items */
+.header {
+    grid-area: header;
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.main {
+    grid-area: main;
+}
+
+.footer {
+    grid-area: footer;
+}
+
+/* Responsive Grid */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+/* Complex Layout */
+.complex-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: 100px 1fr 100px;
+    min-height: 100vh;
+}
+
+/* Image Gallery */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.gallery-item {
+    aspect-ratio: 1;
+    object-fit: cover;
+}`,
+          },
+        },
+        {
+          id: "css-6",
+          title: "6. What are CSS variables and how are they used?",
+          answer: {
+            text: `CSS variables (Custom Properties) allow you to store and reuse values throughout your stylesheet. They provide better maintainability and theming capabilities.
+
+Key Features:
+1. Declaration:
+   - Syntax: --variable-name: value;
+   - Scope: Global or local
+   - Inheritance: Follows CSS cascade
+
+2. Usage:
+   - Syntax: var(--variable-name, fallback)
+   - Fallback values
+   - Dynamic updates
+   - JavaScript interaction
+
+3. Benefits:
+   - Centralized values
+   - Easy theming
+   - Dynamic updates
+   - Better maintainability
+   - Reduced repetition
+
+4. Common Use Cases:
+   - Color schemes
+   - Spacing systems
+   - Typography scales
+   - Breakpoints
+   - Theme switching`,
+            example: `/* CSS Variables */
+:root {
+    /* Colors */
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #ffffff;
+    --text-color: #212529;
+
+    /* Typography */
+    --font-family: system-ui, -apple-system, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.5;
+
+    /* Spacing */
+    --spacing-unit: 8px;
+    --spacing-xs: calc(var(--spacing-unit) * 0.5);
+    --spacing-sm: var(--spacing-unit);
+    --spacing-md: calc(var(--spacing-unit) * 2);
+    --spacing-lg: calc(var(--spacing-unit) * 3);
+
+    /* Breakpoints */
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+}
+
+/* Usage */
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.container {
+    padding: var(--spacing-md);
+    max-width: var(--breakpoint-lg);
+    margin: 0 auto;
+}
+
+.button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Theme Switching */
+[data-theme="dark"] {
+    --background-color: #212529;
+    --text-color: #ffffff;
+}
+
+/* JavaScript Interaction */
+document.documentElement.style.setProperty('--primary-color', '#ff0000');`,
+          },
+        },
+        {
+          id: "css-7",
+          title: "7. What are CSS animations and transitions?",
+          answer: {
+            text: `CSS animations and transitions allow you to create smooth, animated effects without JavaScript.
+
+Transitions:
+- Property changes over time
+- Triggered by state changes
+- Simple animations
+- Limited control
+- Better performance
+
+Animations:
+- Complex sequences
+- Multiple keyframes
+- Independent timing
+- More control
+- Reusable
+
+Key Properties:
+1. Transitions:
+   - transition-property: Properties to animate
+   - transition-duration: Animation length
+   - transition-timing-function: Speed curve
+   - transition-delay: Start delay
+
+2. Animations:
+   - animation-name: Keyframe name
+   - animation-duration: Animation length
+   - animation-timing-function: Speed curve
+   - animation-delay: Start delay
+   - animation-iteration-count: Repeat count
+   - animation-direction: Play direction
+   - animation-fill-mode: Final state
+   - animation-play-state: Running/paused
+
+3. Timing Functions:
+   - ease: Default
+   - linear: Constant speed
+   - ease-in: Start slow
+   - ease-out: End slow
+   - ease-in-out: Both ends slow
+   - cubic-bezier: Custom curve`,
+            example: `/* Transitions */
+.button {
+    background-color: blue;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: red;
+}
+
+/* Complex Transition */
+.element {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Complex Animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Animation with Multiple Properties */
+@keyframes complex {
+    0% {
+        transform: translateY(0) rotate(0);
+        opacity: 0;
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.complex {
+    animation: complex 3s ease-in-out infinite;
+}`,
+          },
+        },
       ],
     },
     {
@@ -2716,169 +3860,6 @@ function ThemedButton() {
     </button>
   );
 }`,
-          },
-        },
-      ],
-    },
-    {
-      id: "html",
-      title: "HTML",
-      questions: [
-        {
-          id: "html-1",
-          title: "1. What is DOCTYPE in HTML?",
-          answer: {
-            text: `The DOCTYPE declaration is the first line of code required in every HTML or XHTML document. It tells the web browser what version of HTML the page is written in.
-
-Key points:
-- Must be the first line in HTML documents
-- Not case sensitive
-- Tells browser how to render the page
-- Different DOCTYPEs for different HTML versions
-- HTML5 uses the simplest DOCTYPE`,
-            example: `<!DOCTYPE html>
-<html>
-    <head>
-        <title>My Page</title>
-    </head>
-    <body>
-        <h1>Hello World</h1>
-    </body>
-</html>`,
-          },
-        },
-        {
-          id: "html-2",
-          title: "2. What are semantic elements in HTML5?",
-          answer: {
-            text: `Semantic elements clearly describe their meaning to both the browser and the developer. They make the code more readable and improve accessibility.
-
-Common semantic elements:
-- <header>: Introductory content
-- <nav>: Navigation links
-- <main>: Main content
-- <article>: Self-contained content
-- <section>: Thematic grouping
-- <aside>: Side content
-- <footer>: Footer content
-- <figure>: Self-contained content with caption
-- <figcaption>: Caption for figure
-- <time>: Date/time
-- <mark>: Highlighted text`,
-            example: `<header>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-        </ul>
-    </nav>
-</header>
-
-<main>
-    <article>
-        <h1>Article Title</h1>
-        <section>
-            <h2>Section Title</h2>
-            <p>Content goes here...</p>
-        </section>
-    </article>
-
-    <aside>
-        <h3>Related Content</h3>
-        <p>Sidebar content...</p>
-    </aside>
-</main>
-
-<footer>
-    <p>Copyright © 2023</p>
-</footer>`,
-          },
-        },
-        {
-          id: "html-3",
-          title: "3. What is accessibility in HTML?",
-          answer: {
-            text: `Accessibility (a11y) is the practice of making websites usable by as many people as possible. HTML provides several features to improve accessibility.
-
-Key accessibility features:
-- Semantic HTML elements
-- ARIA attributes
-- Proper heading structure
-- Alt text for images
-- Form labels and descriptions
-- Keyboard navigation
-- Color contrast
-- Screen reader compatibility`,
-            example: `<!-- Semantic structure -->
-<nav aria-label="Main navigation">
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-    </ul>
-</nav>
-
-<!-- Form accessibility -->
-<form>
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required
-           aria-describedby="name-help">
-    <span id="name-help">Enter your full name</span>
-
-    <button type="submit">Submit</button>
-</form>
-
-<!-- Image accessibility -->
-<img src="logo.png" alt="Company Logo"
-     width="200" height="100">
-
-<!-- ARIA roles -->
-<div role="alert" aria-live="assertive">
-    Important message!
-</div>`,
-          },
-        },
-        {
-          id: "html-4",
-          title: "4. What are meta tags in HTML?",
-          answer: {
-            text: `Meta tags provide metadata about the HTML document. They are placed in the head section and are not displayed on the page.
-
-Common meta tags:
-- charset: Character encoding
-- viewport: Mobile device settings
-- description: Page description
-- keywords: Search keywords
-- author: Page author
-- robots: Search engine instructions
-- refresh: Page refresh
-- social media: Open Graph tags`,
-            example: `<head>
-    <!-- Character encoding -->
-    <meta charset="UTF-8">
-    
-    <!-- Viewport settings -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Page description -->
-    <meta name="description" content="Free Web tutorials">
-    
-    <!-- Keywords -->
-    <meta name="keywords" content="HTML, CSS, JavaScript">
-    
-    <!-- Author -->
-    <meta name="author" content="John Doe">
-    
-    <!-- Refresh page -->
-    <meta http-equiv="refresh" content="30">
-    
-    <!-- Social media -->
-    <meta property="og:title" content="My Page">
-    <meta property="og:description" content="Description">
-    <meta property="og:image" content="image.jpg">
-    
-    <!-- Robots -->
-    <meta name="robots" content="index, follow">
-</head>`,
           },
         },
       ],
