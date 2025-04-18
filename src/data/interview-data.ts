@@ -583,7 +583,7 @@ function memoryExample() {
     // When function ends:
     // localVar is automatically removed from stack
     // obj reference is removed from stack
-    // obj in heap is garbage collected if no other references exist
+    // obj in heap is garbage collected if no references exist
 }`,
           },
         },
@@ -1024,141 +1024,1392 @@ function deepCopy(obj) {
         },
         {
           id: "js-19",
-          title: "19. What is prototype in JavaScript?",
+          title:
+            "19. What is the difference between scope and context in JavaScript?",
           answer: {
-            text: `Prototypes are the mechanism by which JavaScript objects inherit features from one another. Every object has a private property that holds a link to another object called its prototype.
+            text: `Scope and context are two fundamental concepts in JavaScript that are often confused:
 
-Prototype Chain:
-- Objects inherit from other objects
-- Properties are looked up through the chain
-- The chain ends at Object.prototype
-- null is the final link in the chain
+Scope:
+- Pertains to the visibility of variables
+- Determines what variables you have access to
+- Is function-based
+- Created during the creation phase of execution context
+- Types: global, function, and block scope
 
-Key points:
-- Every object has a prototype
-- Prototypes form a chain
-- Properties are looked up through the chain
-- Classes are syntactic sugar for prototypes
-- Inheritance is achieved through the prototype chain`,
-            example: `// Creating objects with prototypes
-const personPrototype = {
-    greet() {
-        console.log(\`Hello, my name is \${this.name}!\`);
+Context:
+- Refers to the value of the 'this' keyword
+- Determines which object a function belongs to
+- Is object-based
+- Set when a function is called
+- Can be changed using call(), apply(), or bind()
+
+Key differences:
+- Scope is about variable access
+- Context is about object ownership
+- Scope is static (defined at creation)
+- Context is dynamic (determined at call time)`,
+            example: `// Scope example
+const globalVar = 'global';
+
+function outer() {
+    const outerVar = 'outer';
+    
+    function inner() {
+        const innerVar = 'inner';
+        console.log(globalVar); // Accessible
+        console.log(outerVar); // Accessible
+        console.log(innerVar); // Accessible
+    }
+    
+    inner();
+}
+
+// Context example
+const obj = {
+    name: 'John',
+    greet: function() {
+        console.log(\`Hello, \${this.name}!\`);
     }
 };
 
-function Person(name) {
-    this.name = name;
-}
+obj.greet(); // Context is obj
+const greet = obj.greet;
+greet(); // Context is global (or undefined in strict mode)`,
+          },
+        },
+        {
+          id: "js-20",
+          title:
+            "20. What are lexical scope and lexical environments in JavaScript?",
+          answer: {
+            text: `Lexical Scope:
+- The scope of a variable is determined by its location within the source code
+- Inner functions can access variables from their outer scope
+- Scope is defined at write time, not runtime
+- Follows the nesting of functions in the code
 
-Person.prototype = personPrototype;
-Person.prototype.constructor = Person;
+Lexical Environment:
+- A specification type used to define the association of identifiers to specific variables and functions
+- Consists of two components:
+  1. Environment Record: Stores variable and function declarations
+  2. Reference to the outer environment: Links to the parent scope
 
-const person = new Person('John');
-person.greet(); // 'Hello, my name is John!'
-
-// Prototype chain
-console.log(person.__proto__ === Person.prototype); // true
-console.log(Person.prototype.__proto__ === Object.prototype); // true
-console.log(Object.prototype.__proto__ === null); // true
-
-// Class syntax (syntactic sugar for prototypes)
-class Person {
-    constructor(name) {
-        this.name = name;
+Key points:
+- Lexical scope is static
+- Inner functions have access to outer variables
+- Scope chain is created during function creation
+- Variables are looked up through the scope chain`,
+            example: `// Lexical scope
+function outer() {
+    const x = 10;
+    
+    function inner() {
+        const y = 20;
+        console.log(x + y); // Can access x from outer scope
     }
     
-    greet() {
-        console.log(\`Hello, my name is \${this.name}!\`);
+    inner();
+}
+
+// Lexical environment
+function createCounter() {
+    let count = 0; // Stored in environment record
+    
+    return function() {
+        count++; // Can access count through scope chain
+        return count;
+    };
+}
+
+const counter = createCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2`,
+          },
+        },
+        {
+          id: "js-21",
+          title:
+            "21. What is the difference between context and execution context?",
+          answer: {
+            text: `Context and execution context are related but distinct concepts:
+
+Context:
+- Refers to the value of 'this'
+- Determines which object a function belongs to
+- Can be changed using call(), apply(), or bind()
+- Is about object ownership
+
+Execution Context:
+- The environment in which JavaScript code is executed
+- Created when a function is called
+- Contains:
+  1. Variable Object (VO)
+  2. Scope Chain
+  3. 'this' value
+- Types: Global and Function execution contexts
+
+Key differences:
+- Context is about 'this'
+- Execution context is about the entire environment
+- Context is one part of execution context
+- Execution context includes scope chain and variable object`,
+            example: `// Context
+const obj = {
+    name: 'John',
+    greet: function() {
+        console.log(this.name);
+    }
+};
+
+obj.greet(); // Context is obj
+
+// Execution Context
+function example() {
+    const x = 10; // Stored in Variable Object
+    
+    function inner() {
+        console.log(x); // Found through Scope Chain
+    }
+    
+    inner();
+}
+
+example(); // Creates new execution context`,
+          },
+        },
+        {
+          id: "js-22",
+          title: "22. How does JavaScript code get executed?",
+          answer: {
+            text: `JavaScript code execution follows a specific process:
+
+1. Creation Phase:
+- Global Execution Context (GEC) is created
+- Variable and function declarations are hoisted
+- Scope chain is established
+- 'this' value is determined
+
+2. Execution Phase:
+- Code is executed line by line
+- Variables are assigned values
+- Functions are called
+- New execution contexts are created for functions
+
+Key points:
+- JavaScript is single-threaded
+- Code is executed synchronously
+- Functions create new execution contexts
+- Variables are hoisted during creation
+- Scope chain is established at creation`,
+            example: `// Execution example
+console.log(x); // undefined (hoisted)
+var x = 10;
+
+function example() {
+    console.log(y); // undefined (hoisted)
+    var y = 20;
+    console.log(x); // 10 (from outer scope)
+}
+
+example();
+
+// Execution order
+1. GEC created
+2. x and example() hoisted
+3. console.log(x) executed
+4. x assigned 10
+5. example() called
+6. New execution context created
+7. y hoisted
+8. console.log(y) executed
+9. y assigned 20
+10. console.log(x) executed`,
+          },
+        },
+        {
+          id: "js-23",
+          title: "23. What is the call stack in JavaScript?",
+          answer: {
+            text: `The call stack is a mechanism that keeps track of function calls in JavaScript:
+
+Characteristics:
+- Follows Last In, First Out (LIFO) principle
+- Stores execution contexts
+- Tracks the current position in code
+- Has a maximum size limit
+- Throws stack overflow error when full
+
+How it works:
+1. When a function is called, its execution context is pushed
+2. When a function returns, its context is popped
+3. The current context is always at the top
+4. Global context is at the bottom
+
+Key points:
+- Single thread of execution
+- Synchronous execution
+- Stack overflow protection
+- Error tracking
+- Debugging aid`,
+            example: `function first() {
+    console.log('First');
+    second();
+}
+
+function second() {
+    console.log('Second');
+    third();
+}
+
+function third() {
+    console.log('Third');
+}
+
+first();
+
+// Call stack visualization:
+// 1. first() called
+//    Stack: [global, first]
+// 2. second() called from first
+//    Stack: [global, first, second]
+// 3. third() called from second
+//    Stack: [global, first, second, third]
+// 4. third() returns
+//    Stack: [global, first, second]
+// 5. second() returns
+//    Stack: [global, first]
+// 6. first() returns
+//    Stack: [global]`,
+          },
+        },
+        {
+          id: "js-24",
+          title: "24. What is the event loop in JavaScript?",
+          answer: {
+            text: `The event loop is a mechanism that handles asynchronous operations in JavaScript. The event loop constantly checks whether or not the call stack is empty. If it is empty, new functions are added from the event queue. If it is not, then the current function call is processed:
+
+Components:
+1. Call Stack
+2. Web APIs
+3. Callback Queue
+4. Event Loop
+
+How it works:
+1. Synchronous code runs in the call stack
+2. Async operations are handled by Web APIs
+3. Callbacks are placed in the callback queue
+4. Event loop moves callbacks to the stack when it's empty
+
+Key points:
+- Enables non-blocking operations
+- Handles async callbacks
+- Maintains single thread
+- Processes events in order
+- Prevents stack overflow`,
+            example: `console.log('Start');
+
+setTimeout(() => {
+    console.log('Timeout');
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log('Promise');
+});
+
+console.log('End');
+
+// Output:
+// Start
+// End
+// Promise
+// Timeout
+
+// Execution order:
+1. 'Start' logged
+2. setTimeout scheduled
+3. Promise resolved
+4. 'End' logged
+5. Call stack empty
+6. Promise callback executed
+7. Timeout callback executed`,
+          },
+        },
+        {
+          id: "js-25",
+          title: "25. What are task queues in JavaScript?",
+          answer: {
+            text: `JavaScript has different types of task queues for handling asynchronous operations:
+
+Types of Queues:
+1. Task Queue (Macrotask Queue)
+   - setTimeout
+   - setInterval
+   - setImmediate
+   - I/O operations
+   - UI rendering
+
+2. Microtask Queue
+   - Promise callbacks
+   - MutationObserver
+   - process.nextTick
+
+Priority:
+1. Microtasks have higher priority
+2. All microtasks are executed before next macrotask
+3. Event loop processes one macrotask at a time
+4. Microtasks can create more microtasks
+
+Key points:
+- Different queues for different tasks
+- Microtasks have priority
+- Tasks are processed in order
+- Queue processing is part of event loop`,
+            example: `console.log('Start');
+
+setTimeout(() => {
+    console.log('Timeout');
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log('Promise 1');
+}).then(() => {
+    console.log('Promise 2');
+});
+
+console.log('End');
+
+// Output:
+// Start
+// End
+// Promise 1
+// Promise 2
+// Timeout
+
+// Execution order:
+1. Synchronous code runs
+2. Microtasks (Promises) execute
+3. Macrotasks (Timeout) execute`,
+          },
+        },
+        {
+          id: "js-26",
+          title: "26. What is the difference between memory heap and stack?",
+          answer: {
+            text: `Memory Heap and Stack are two different memory allocation methods:
+
+Memory Heap:
+- Used for dynamic memory allocation
+- Stores objects and functions
+- Memory is allocated randomly
+- Slower access
+- No size limit
+- Manual memory management
+
+Stack:
+- Used for static memory allocation
+- Stores primitive values and references
+- Memory is allocated in LIFO order
+- Faster access
+- Has size limits
+- Automatic memory management
+
+Key differences:
+- Stack is for static allocation
+- Heap is for dynamic allocation
+- Stack is faster but limited
+- Heap is slower but flexible
+- Stack is automatically managed
+- Heap requires garbage collection`,
+            example: `// Stack memory
+let number = 10; // Primitive stored in stack
+let string = 'Hello'; // Primitive stored in stack
+let reference = { name: 'John' }; // Reference stored in stack, object in heap
+
+// Heap memory
+function createObject() {
+    return { 
+        data: new Array(1000000).fill('x') // Large object stored in heap
+    };
+}
+
+const largeObject = createObject(); // Reference in stack, object in heap
+
+// Memory management
+function example() {
+    let localVar = 'Stack'; // Stack memory
+    let obj = { data: 'Heap' }; // Heap memory
+    
+    // When function ends:
+    // localVar is automatically removed from stack
+    // obj reference is removed from stack
+    // obj in heap is garbage collected if no references exist
+}`,
+          },
+        },
+        {
+          id: "js-27",
+          title: "27. What is a polyfill in JavaScript?",
+          answer: {
+            text: `A polyfill is a piece of code that provides functionality that is not natively supported by a browser or environment. It allows developers to use modern JavaScript features in older browsers.
+
+Key points:
+- Implements newer features in older environments
+- Checks if feature exists before implementing
+- Provides fallback functionality
+- Helps maintain backward compatibility
+- Can be loaded conditionally
+
+Common use cases:
+- Array methods (map, filter, reduce)
+- Promise implementation
+- Fetch API
+- Object methods
+- String methods`,
+            example: `// Example: Array.prototype.includes polyfill
+if (!Array.prototype.includes) {
+    Array.prototype.includes = function(searchElement, fromIndex) {
+        if (this == null) {
+            throw new TypeError('"this" is null or not defined');
+        }
+
+        const o = Object(this);
+        const len = o.length >>> 0;
+
+        if (len === 0) return false;
+
+        const n = fromIndex | 0;
+        let k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+        while (k < len) {
+            if (o[k] === searchElement) {
+                return true;
+            }
+            k++;
+        }
+        return false;
+    };
+}`,
+          },
+        },
+        {
+          id: "js-28",
+          title:
+            "28. What are the advantages of Promise.all and when should it be used?",
+          answer: {
+            text: `Promise.all is a method that takes an array of promises and returns a single promise that resolves when all of the input promises have resolved, or rejects if any of the input promises reject.
+
+Advantages:
+- Parallel execution of multiple promises
+- Single error handling point
+- Maintains order of results
+- Efficient resource utilization
+- Cleaner code structure
+
+When to use:
+- Multiple independent API calls
+- Data aggregation from different sources
+- Parallel processing of data
+- Batch operations
+- When all promises must succeed
+
+When not to use:
+- When promises are dependent on each other
+- When some promises can fail independently
+- When order of execution matters
+- When you need partial results`,
+            example: `// Example: Fetching multiple API endpoints
+const fetchUserData = fetch('/api/user');
+const fetchPosts = fetch('/api/posts');
+const fetchComments = fetch('/api/comments');
+
+Promise.all([fetchUserData, fetchPosts, fetchComments])
+    .then(responses => Promise.all(responses.map(r => r.json())))
+    .then(([user, posts, comments]) => {
+        console.log('User:', user);
+        console.log('Posts:', posts);
+        console.log('Comments:', comments);
+    })
+    .catch(error => {
+        console.error('One of the requests failed:', error);
+    });`,
+          },
+        },
+        {
+          id: "js-29",
+          title: "29. What is throttling in JavaScript?",
+          answer: {
+            text: `Throttling is a technique that limits how often a function can be called over time. It ensures that a function is called at most once in a specified time period.
+
+Key points:
+- Limits function execution frequency
+- Useful for performance optimization
+- Prevents overwhelming the system
+- Maintains consistent rate of execution
+- Common use cases:
+  - Scroll events
+  - Resize events
+  - Mouse movement
+  - API rate limiting
+  - Game loops`,
+            example: `function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// Usage
+const throttledScroll = throttle(() => {
+    console.log('Scroll event throttled');
+}, 1000);
+
+window.addEventListener('scroll', throttledScroll);`,
+          },
+        },
+        {
+          id: "js-30",
+          title: "30. What is debouncing in JavaScript?",
+          answer: {
+            text: `Debouncing is a technique that delays the execution of a function until after a specified time period has elapsed since the last time it was called. It ensures that a function is only executed once after a series of rapid calls.
+
+Key points:
+- Delays function execution
+- Groups multiple calls into one
+- Useful for performance optimization
+- Prevents unnecessary processing
+- Common use cases:
+  - Search input
+  - Window resize
+  - Form validation
+  - Auto-save functionality
+  - API calls on user input`,
+            example: `function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+// Usage
+const debouncedSearch = debounce((query) => {
+    console.log('Searching for:', query);
+    // API call or other expensive operation
+}, 500);
+
+searchInput.addEventListener('input', (e) => {
+    debouncedSearch(e.target.value);
+});`,
+          },
+        },
+        {
+          id: "js-31",
+          title: "31. What are callbacks in JavaScript?",
+          answer: {
+            text: `Callbacks are functions that are passed as arguments to other functions and are executed after some operation has been completed. They are a fundamental part of asynchronous programming in JavaScript.
+
+Key points:
+- Functions passed as arguments
+- Executed after an operation completes
+- Enable asynchronous programming
+- Can be synchronous or asynchronous
+- Common patterns:
+  - Error-first callbacks
+  - Promise-based callbacks
+  - Event-based callbacks
+
+Advantages:
+- Simple to understand
+- Flexible and powerful
+- Widely supported
+- Good for simple async operations
+
+Disadvantages:
+- Callback hell (nested callbacks)
+- Error handling complexity
+- Hard to maintain
+- Difficult to debug`,
+            example: `// Synchronous callback
+function processArray(arr, callback) {
+    for (let i = 0; i < arr.length; i++) {
+        callback(arr[i]);
     }
 }
 
-// Inheritance
-class Student extends Person {
-    constructor(name, grade) {
-        super(name);
-        this.grade = grade;
+processArray([1, 2, 3], (item) => {
+    console.log(item * 2);
+});
+
+// Asynchronous callback
+function fetchData(url, callback) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => callback(null, data))
+        .catch(error => callback(error, null));
+}
+
+// Error-first callback pattern
+fetchData('https://api.example.com/data', (error, data) => {
+    if (error) {
+        console.error('Error:', error);
+        return;
     }
-    
-    study() {
-        console.log(\`\${this.name} is studying.\`);
+    console.log('Data:', data);
+});`,
+          },
+        },
+        {
+          id: "js-32",
+          title:
+            "32. What are some useful Chrome DevTools features for debugging JavaScript?",
+          answer: {
+            text: `Chrome DevTools provides several powerful features for debugging JavaScript:
+
+1. Console:
+- Console.log() and other console methods
+- Console.table() for tabular data
+- Console.time() for performance measurement
+- Console.trace() for stack traces
+- Console.assert() for assertions
+
+2. Sources Panel:
+- Breakpoints and conditional breakpoints
+- Step through code execution
+- Watch expressions
+- Call stack inspection
+- Scope variables inspection
+
+3. Network Panel:
+- Network request inspection
+- Request/response headers
+- Timing information
+- Request blocking
+- Throttling network speed
+
+4. Performance Panel:
+- CPU profiling
+- Memory profiling
+- Frame rate analysis
+- Performance bottlenecks
+- Timeline recording
+
+5. Memory Panel:
+- Heap snapshots
+- Memory allocation timeline
+- Memory leak detection
+- Object allocation tracking
+
+6. Application Panel:
+- Local storage inspection
+- Session storage
+- IndexedDB
+- Cookies
+- Cache storage`,
+            example: `// Console examples
+console.table([
+    { name: 'John', age: 30 },
+    { name: 'Jane', age: 25 }
+]);
+
+console.time('operation');
+// Some operation
+console.timeEnd('operation');
+
+// Debugging with breakpoints
+function processData(data) {
+    debugger; // Sets a breakpoint
+    const result = data.map(item => {
+        return item * 2;
+    });
+    return result;
+}
+
+// Performance measurement
+performance.mark('start');
+// Some operation
+performance.mark('end');
+performance.measure('operation', 'start', 'end');`,
+          },
+        },
+        {
+          id: "js-33",
+          title: "33. How can you use Chrome DevTools to debug memory leaks?",
+          answer: {
+            text: `Chrome DevTools provides several tools to help identify and debug memory leaks:
+
+1. Memory Panel:
+- Take heap snapshots
+- Compare snapshots
+- Track object allocation
+- Analyze memory usage
+- Identify retained objects
+
+2. Performance Panel:
+- Record memory timeline
+- Monitor memory usage
+- Track garbage collection
+- Identify memory spikes
+- Analyze memory patterns
+
+3. Common Memory Leak Patterns:
+- Forgotten timers
+- Event listeners
+- DOM references
+- Closures
+- Cached data
+
+4. Debugging Steps:
+- Take initial heap snapshot
+- Perform actions
+- Take second snapshot
+- Compare snapshots
+- Analyze retained objects
+
+5. Prevention Tips:
+- Clear timers and intervals
+- Remove event listeners
+- Nullify references
+- Use weak references
+- Monitor memory usage`,
+            example: `// Example of potential memory leak
+class DataManager {
+    constructor() {
+        this.cache = new Map();
+        this.listeners = new Set();
+    }
+
+    addListener(callback) {
+        this.listeners.add(callback);
+    }
+
+    removeListener(callback) {
+        this.listeners.delete(callback);
+    }
+
+    // Potential memory leak if listeners aren't removed
+    cleanup() {
+        this.cache.clear();
+        this.listeners.clear();
+    }
+}
+
+// Using Chrome DevTools to debug:
+1. Open DevTools
+2. Go to Memory panel
+3. Take heap snapshot
+4. Create and use DataManager
+5. Take second snapshot
+6. Compare snapshots
+7. Look for retained objects`,
+          },
+        },
+        {
+          id: "js-34",
+          title:
+            "34. How can you use Chrome DevTools to monitor and improve performance?",
+          answer: {
+            text: `Chrome DevTools provides several tools for performance monitoring and optimization:
+
+1. Performance Panel:
+- Record and analyze runtime performance
+- Identify bottlenecks
+- View frame rate
+- Analyze CPU usage
+- Track memory usage
+
+2. Network Panel:
+- Monitor network requests
+- Analyze load times
+- Identify slow resources
+- Check request priorities
+- View waterfall charts
+
+3. Lighthouse:
+- Run performance audits
+- Get optimization suggestions
+- Check accessibility
+- Analyze SEO
+- Test PWA features
+
+4. Memory Panel:
+- Track memory usage
+- Identify memory leaks
+- Analyze heap snapshots
+- Monitor garbage collection
+- Track object allocation
+
+5. Rendering Tools:
+- Analyze paint operations
+- Check layout shifts
+- Monitor FPS
+- Debug repaints
+- Identify forced layouts
+
+Key Performance Metrics:
+- First Contentful Paint (FCP)
+- Largest Contentful Paint (LCP)
+- Time to Interactive (TTI)
+- Total Blocking Time (TBT)
+- Cumulative Layout Shift (CLS)`,
+            example: `// Performance monitoring in code
+performance.mark('startOperation');
+
+// Some operation
+for (let i = 0; i < 1000000; i++) {
+    // Intensive operation
+}
+
+performance.mark('endOperation');
+performance.measure('operation', 'startOperation', 'endOperation');
+
+// Using the Performance API
+const observer = new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+        console.log(entry.name, entry.duration);
+    }
+});
+
+observer.observe({ entryTypes: ['measure'] });`,
+          },
+        },
+        {
+          id: "js-35",
+          title: "35. What is Local Storage and how is it used in JavaScript?",
+          answer: {
+            text: `Local Storage is a web storage mechanism that allows websites to store data persistently in a user's browser. The data persists even after the browser is closed and reopened. Data in localStorage does not expire unless you remove it manually.
+
+Key characteristics:
+- Stores data as key-value pairs
+- Data persists across sessions
+- Storage limit of ~5-10MB
+- Data is stored as strings
+- Synchronous operations
+- Same-origin policy applies
+
+Common use cases:
+- User preferences
+- Caching data
+- Offline functionality
+- Form data persistence
+- Application state
+
+Methods:
+- setItem(key, value)
+- getItem(key)
+- removeItem(key)
+- clear()
+- key(index)
+- length
+
+Limitations:
+- No data expiration
+- Synchronous API
+- Limited storage space
+- String-only storage
+- No data encryption`,
+            example: `// Storing data
+localStorage.setItem('username', 'john_doe');
+localStorage.setItem('theme', 'dark');
+
+// Retrieving data
+const username = localStorage.getItem('username');
+const theme = localStorage.getItem('theme');
+
+// Removing data
+localStorage.removeItem('username');
+
+// Clearing all data
+localStorage.clear();
+
+// Checking storage
+const isAvailable = 'localStorage' in window;
+const storageSize = JSON.stringify(localStorage).length;
+
+// Storing objects
+const user = { name: 'John', age: 30 };
+localStorage.setItem('user', JSON.stringify(user));
+const storedUser = JSON.parse(localStorage.getItem('user'));`,
+          },
+        },
+        {
+          id: "js-36",
+          title:
+            "36. What is Session Storage and how does it differ from Local Storage?",
+          answer: {
+            text: `Session Storage is a web storage mechanism similar to Local Storage, but with data that persists only for the duration of the page session. The data is cleared when the tab or browser is closed.
+
+Key differences from Local Storage:
+- Data persists only for the session
+- Data is cleared on tab close
+- Storage is tab-specific
+- Same storage limit (~5-10MB)
+- Same API methods
+- Same-origin policy applies
+
+Use cases:
+- Temporary form data
+- Multi-step processes
+- Shopping cart data
+- Tab-specific state
+- Sensitive data
+
+Methods (same as Local Storage):
+- setItem(key, value)
+- getItem(key)
+- removeItem(key)
+- clear()
+- key(index)
+- length
+
+Advantages over Local Storage:
+- Better for sensitive data
+- Automatic cleanup
+- Tab isolation
+- Reduced memory usage
+- Better privacy
+
+When to use:
+- Temporary data storage
+- Tab-specific data
+- Sensitive information
+- Multi-step forms
+- Shopping sessions`,
+            example: `// Storing session data
+sessionStorage.setItem('formData', JSON.stringify({
+    step: 1,
+    name: 'John',
+    email: 'john@example.com'
+}));
+
+// Retrieving session data
+const formData = JSON.parse(sessionStorage.getItem('formData'));
+
+// Updating session data
+formData.step = 2;
+sessionStorage.setItem('formData', JSON.stringify(formData));
+
+// Checking session storage
+const isAvailable = 'sessionStorage' in window;
+const hasData = sessionStorage.length > 0;
+
+// Clearing session data
+sessionStorage.clear();
+
+// Tab-specific storage
+window.addEventListener('storage', (event) => {
+    if (event.storageArea === sessionStorage) {
+        console.log('Session storage changed in another tab');
+    }
+});`,
+          },
+        },
+      ],
+    },
+    {
+      id: "nodejs",
+      title: "Node.js",
+      questions: [
+        {
+          id: "node-1",
+          title: "1. What is Node.js and what are its key features?",
+          answer: {
+            text: `Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows JavaScript to run outside of a web browser, enabling server-side development.
+
+Key features:
+- Asynchronous and event-driven
+- Single-threaded with event loop
+- Non-blocking I/O
+- Cross-platform
+- NPM ecosystem
+- Built-in modules
+- Fast execution
+- Scalable
+
+Architecture:
+- V8 Engine: Executes JavaScript code
+- Libuv: Handles async I/O operations
+- Event Loop: Manages async operations
+- Node.js Bindings: Connects JavaScript to C/C++ libraries
+
+Use cases:
+- Web servers
+- APIs
+- Real-time applications
+- Microservices
+- Command-line tools
+- Data streaming
+- IoT applications`,
+            example: `// Simple HTTP server
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, Node.js!');
+});
+
+server.listen(3000, () => {
+    console.log('Server running at http://localhost:3000/');
+});
+
+// Using built-in modules
+const fs = require('fs');
+const path = require('path');
+
+// Reading a file asynchronously
+fs.readFile(path.join(__dirname, 'file.txt'), 'utf8', (err, data) => {
+    if (err) throw err;
+    console.log(data);
+});`,
+          },
+        },
+        {
+          id: "node-2",
+          title: "2. How does Node.js work under the hood?",
+          answer: {
+            text: `Node.js operates on a single-threaded event loop architecture that enables non-blocking I/O operations.
+
+Key components:
+1. Event Loop:
+   - Handles async operations
+   - Manages callbacks
+   - Processes events
+   - Maintains execution order
+
+2. Thread Pool:
+   - Handles heavy operations
+   - Default size of 4 threads
+   - Used for file system operations
+   - Crypto operations
+
+3. V8 Engine:
+   - Executes JavaScript code
+   - Compiles to machine code
+   - Manages memory
+   - Handles garbage collection
+
+4. Libuv:
+   - Cross-platform async I/O
+   - Event loop implementation
+   - Thread pool management
+   - File system operations
+
+Execution flow:
+1. Code execution starts
+2. Async operations are delegated
+3. Event loop processes callbacks
+4. Thread pool handles heavy tasks
+5. Results are returned to main thread`,
+            example: `// Understanding the event loop
+console.log('Start');
+
+setTimeout(() => {
+    console.log('Timeout 1');
+}, 0);
+
+setImmediate(() => {
+    console.log('Immediate 1');
+});
+
+process.nextTick(() => {
+    console.log('Next Tick 1');
+});
+
+console.log('End');
+
+// Output order:
+// Start
+// End
+// Next Tick 1
+// Timeout 1
+// Immediate 1`,
+          },
+        },
+        {
+          id: "node-3",
+          title:
+            "3. What is the difference between setImmediate() and process.nextTick()?",
+          answer: {
+            text: `setImmediate() and process.nextTick() are both used to schedule callbacks, but they operate in different phases of the event loop.
+
+setImmediate():
+- Executes in the "check" phase
+- Runs after I/O events
+- Lower priority than nextTick
+- Better for I/O operations
+- More predictable timing
+
+process.nextTick():
+- Executes before the next event loop phase
+- Runs immediately after current operation
+- Higher priority than setImmediate
+- Can lead to starvation
+- Used for cleanup
+
+Key differences:
+1. Priority:
+   - nextTick: Highest priority
+   - setImmediate: Lower priority
+
+2. Phase:
+   - nextTick: Runs between phases
+   - setImmediate: Runs in check phase
+
+3. Use cases:
+   - nextTick: Error handling, cleanup
+   - setImmediate: I/O operations, timeouts
+
+4. Performance:
+   - nextTick: Can block event loop
+   - setImmediate: More efficient for I/O`,
+            example: `// Priority demonstration
+console.log('Start');
+
+setImmediate(() => {
+    console.log('Immediate 1');
+});
+
+process.nextTick(() => {
+    console.log('Next Tick 1');
+});
+
+setImmediate(() => {
+    console.log('Immediate 2');
+});
+
+process.nextTick(() => {
+    console.log('Next Tick 2');
+});
+
+console.log('End');
+
+// Output order:
+// Start
+// End
+// Next Tick 1
+// Next Tick 2
+// Immediate 1
+// Immediate 2
+
+// Practical use cases
+function processData(data, callback) {
+    // Error handling with nextTick
+    if (!data) {
+        process.nextTick(() => {
+            callback(new Error('No data provided'));
+        });
+        return;
+    }
+
+    // I/O operation with setImmediate
+    setImmediate(() => {
+        // Process data
+        callback(null, processedData);
+    });
+}`,
+          },
+        },
+        {
+          id: "node-4",
+          title: "4. What is NestJS and what are its main features?",
+          answer: {
+            text: `NestJS is a progressive Node.js framework for building efficient, reliable, and scalable server-side applications. It uses TypeScript and is built with a modular architecture.
+
+Key features:
+- Modular architecture
+- Dependency injection
+- TypeScript support
+- Express/Fastify integration
+- Microservices support
+- GraphQL support
+- WebSocket support
+- Testing utilities
+
+Architecture components:
+1. Modules:
+   - Organize application
+   - Define providers
+   - Import/export functionality
+
+2. Controllers:
+   - Handle requests
+   - Define routes
+   - Process input/output
+
+3. Providers:
+   - Business logic
+   - Services
+   - Repositories
+   - Factories
+
+4. Middleware:
+   - Request processing
+   - Response transformation
+   - Error handling
+
+5. Guards:
+   - Authentication
+   - Authorization
+   - Role-based access
+
+6. Pipes:
+   - Input validation
+   - Data transformation
+   - Type conversion`,
+            example: `// Basic NestJS application
+import { Module, Controller, Get } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+
+@Controller('cats')
+class CatsController {
+    @Get()
+    findAll() {
+        return 'This action returns all cats';
+    }
+}
+
+@Module({
+    controllers: [CatsController],
+})
+class AppModule {}
+
+async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+    await app.listen(3000);
+}
+
+bootstrap();
+
+// Using providers and dependency injection
+@Injectable()
+class CatsService {
+    private cats: Cat[] = [];
+
+    findAll(): Cat[] {
+        return this.cats;
+    }
+}
+
+@Controller('cats')
+class CatsController {
+    constructor(private catsService: CatsService) {}
+
+    @Get()
+    findAll() {
+        return this.catsService.findAll();
     }
 }`,
           },
         },
         {
-          id: "js-20",
-          title: "20. What is inheritance in JavaScript?",
+          id: "node-5",
+          title:
+            "5. What is a Backend-for-Frontend (BFF) pattern and how is it implemented in Node.js?",
           answer: {
-            text: `Inheritance in JavaScript is achieved through the prototype chain. Objects can inherit properties and methods from other objects.
+            text: `Backend-for-Frontend (BFF) is an architectural pattern where a dedicated backend service is created for each frontend application or client type.
 
-Prototypal Inheritance:
-- Objects inherit from other objects
-- Properties are looked up through the chain
-- The prototype chain is used for property lookup
-- super() is used to call parent class constructor
+Key characteristics:
+- Client-specific backend
+- Aggregates multiple services
+- Handles client-specific logic
+- Optimizes data for clients
+- Manages client state
 
-Key points:
-- JavaScript uses prototypal inheritance
-- Objects inherit from other objects
-- The prototype chain is used for property lookup
-- Classes provide syntactic sugar for inheritance
-- super() is used to call parent class constructor`,
-            example: `// Prototypal Inheritance
-// Parent object
-const animal = {
-    eat() {
-        console.log('Eating...');
-    },
-    sleep() {
-        console.log('Sleeping...');
+Benefits:
+- Better client optimization
+- Reduced client complexity
+- Improved performance
+- Better security
+- Easier maintenance
+
+Implementation in Node.js:
+1. API Gateway:
+   - Routes requests
+   - Handles authentication
+   - Manages rate limiting
+   - Caches responses
+
+2. Service Aggregation:
+   - Combines multiple APIs
+   - Transforms data
+   - Handles errors
+   - Manages retries
+
+3. Client Optimization:
+   - Data formatting
+   - Response compression
+   - Caching strategies
+   - Error handling
+
+4. Security:
+   - Authentication
+   - Authorization
+   - Input validation
+   - Rate limiting`,
+            example: `// Basic BFF implementation
+const express = require('express');
+const axios = require('axios');
+
+const app = express();
+
+// API Gateway
+app.use('/api/*', async (req, res, next) => {
+    // Authentication
+    const token = req.headers.authorization;
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
     }
-};
 
-// Child object
-const dog = Object.create(animal);
-dog.bark = function() {
-    console.log('Woof!');
-};
-
-// Using inherited methods
-dog.eat(); // 'Eating...'
-dog.sleep(); // 'Sleeping...'
-dog.bark(); // 'Woof!'
-
-// Checking inheritance
-console.log(dog.__proto__ === animal); // true
-
-// Class Inheritance
-class Animal {
-    constructor(name) {
-        this.name = name;
+    // Rate limiting
+    const clientId = req.headers['client-id'];
+    if (await isRateLimited(clientId)) {
+        return res.status(429).json({ error: 'Too many requests' });
     }
+
+    next();
+});
+
+// Service aggregation
+app.get('/api/user-profile', async (req, res) => {
+    try {
+        const [user, orders, preferences] = await Promise.all([
+            axios.get('/users-service/user'),
+            axios.get('/orders-service/orders'),
+            axios.get('/preferences-service/preferences')
+        ]);
+
+        // Transform and combine data
+        const profile = {
+            user: user.data,
+            orders: orders.data,
+            preferences: preferences.data
+        };
+
+        res.json(profile);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Client-specific optimization
+app.get('/api/mobile/user-profile', async (req, res) => {
+    const profile = await getUserProfile();
     
-    eat() {
-        console.log(\`\${this.name} is eating...\`);
-    }
-    
-    sleep() {
-        console.log(\`\${this.name} is sleeping...\`);
-    }
-}
+    // Optimize for mobile
+    const mobileProfile = {
+        ...profile,
+        // Remove unnecessary data
+        // Compress images
+        // Format for mobile
+    };
 
-class Dog extends Animal {
-    constructor(name, breed) {
-        super(name);
-        this.breed = breed;
-    }
-    
-    bark() {
-        console.log('Woof!');
-    }
-}
-
-const dog = new Dog('Rex', 'German Shepherd');
-dog.eat(); // 'Rex is eating...'
-dog.sleep(); // 'Rex is sleeping...'
-dog.bark(); // 'Woof!'`,
+    res.json(mobileProfile);
+});`,
           },
         },
       ],
