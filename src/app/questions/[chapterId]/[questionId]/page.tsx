@@ -3,16 +3,12 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { CodeBlock } from '@/components/ui';
 
-interface QuestionPageProps {
-    params: {
-        chapterId: string;
-        questionId: string;
-    };
-}
-
-export default function QuestionPage({ params }: QuestionPageProps) {
-
-    const { chapterId, questionId } = params;
+export default async function QuestionPage({
+    params,
+}: {
+    params: Promise<{ chapterId: string; questionId: string }>;
+}) {
+    const { chapterId, questionId } = await params;
     const chapter = interviewData.chapters.find(c => c.id === chapterId);
     if (!chapter) notFound();
 
@@ -67,4 +63,13 @@ export default function QuestionPage({ params }: QuestionPageProps) {
             </div>
         </div>
     );
-} 
+}
+
+export async function generateStaticParams() {
+    return interviewData.chapters.flatMap(chapter =>
+        chapter.questions.map(question => ({
+            chapterId: chapter.id,
+            questionId: question.id,
+        }))
+    );
+}
