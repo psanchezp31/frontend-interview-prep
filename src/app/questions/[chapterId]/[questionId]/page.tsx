@@ -10,9 +10,9 @@ interface QuestionPageProps {
     };
 }
 
-export default async function QuestionPage({ params }: QuestionPageProps) {
+export default function QuestionPage({ params }: QuestionPageProps) {
 
-    const { chapterId, questionId } = await params;
+    const { chapterId, questionId } = params;
     const chapter = interviewData.chapters.find(c => c.id === chapterId);
     if (!chapter) notFound();
 
