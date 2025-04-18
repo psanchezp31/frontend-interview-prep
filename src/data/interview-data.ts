@@ -6311,355 +6311,1107 @@ function Button() {
       questions: [
         {
           id: "vue-1",
-          title: "1. What is Vue.js?",
+          title: "1. What is Vue.js 3 and what are its key features?",
           answer: {
-            text: `Vue.js is a progressive JavaScript framework for building user interfaces. It builds on top of standard HTML, CSS and JavaScript, and provides a declarative and component-based programming model.
+            text: `Vue.js 3 is the latest version of the Vue.js framework, introducing significant improvements and new features.
 
 Key features:
-- Declarative rendering
-- Component system
-- Reactivity
-- Directives
-- Lifecycle hooks
-- Computed properties
-- Watchers`,
-            example: `// Basic Example
-<div id="app">
-    <h1>{{ message }}</h1>
-    <button @click="increment">Count: {{ count }}</button>
-</div>
+- Composition API
+- Better TypeScript support
+- Improved performance
+- Smaller bundle size
+- Better reactivity system
+- Teleport and Suspense
+- Multiple v-model bindings
+- Fragments
+- Custom renderers
 
-<script>
-const app = Vue.createApp({
-    data() {
-        return {
-            message: 'Hello Vue!',
-            count: 0
-        }
-    },
-    methods: {
-        increment() {
-            this.count++
-        }
+Major improvements:
+1. Performance:
+   - Faster virtual DOM
+   - Better tree-shaking
+   - Smaller bundle size
+   - Improved memory usage
+
+2. Composition API:
+   - Better code organization
+   - Better TypeScript support
+   - Better code reuse
+   - Better testing
+
+3. Reactivity:
+   - Proxy-based reactivity
+   - Better performance
+   - More predictable
+   - Better debugging
+
+4. TypeScript:
+   - First-class support
+   - Better type inference
+   - Better IDE support
+   - Better documentation`,
+            example: `// Options API (Vue 2 style)
+export default {
+  data() {
+    return {
+      count: 0
     }
-})
-
-app.mount('#app')
-</script>
-
-// Component Example
-// Child component
-const TodoItem = {
-    props: ['todo'],
-    template: \`
-        <li>
-            {{ todo.text }}
-            <button @click="\$emit('remove', todo.id)">X</button>
-        </li>
-    \`
+  },
+  methods: {
+    increment() {
+      this.count++
+    }
+  }
 }
 
-// Parent component
-const TodoList = {
-    components: { TodoItem },
-    data() {
-        return {
-            todos: [
-                { id: 1, text: 'Learn Vue' },
-                { id: 2, text: 'Build something' }
-            ]
-        }
-    },
-    methods: {
-        removeTodo(id) {
-            this.todos = this.todos.filter(todo => todo.id !== id)
-        }
-    },
-    template: \`
-        <ul>
-            <todo-item
-                v-for="todo in todos"
-                :key="todo.id"
-                :todo="todo"
-                @remove="removeTodo"
-            />
-        </ul>
-    \`
-}`,
-          },
-        },
-        {
-          id: "vue-2",
-          title: "2. What is two-way data binding in Vue?",
-          answer: {
-            text: `Two-way data binding in Vue allows you to bind form inputs to component data. The v-model directive creates this binding.
-
-Key points:
-- v-model creates two-way binding
-- Works with form inputs
-- Can be used with custom components
-- Supports modifiers (.lazy, .number, .trim)
-- Under the hood, it's syntax sugar for :value and @input`,
-            example: `// Basic form inputs
-<template>
-    <div>
-        <!-- Text input -->
-        <input v-model="message" placeholder="Type something">
-        <p>Message: {{ message }}</p>
-
-        <!-- Checkbox -->
-        <input type="checkbox" v-model="checked">
-        <p>Checked: {{ checked }}</p>
-
-        <!-- Radio buttons -->
-        <input type="radio" v-model="picked" value="one">
-        <input type="radio" v-model="picked" value="two">
-        <p>Picked: {{ picked }}</p>
-
-        <!-- Select -->
-        <select v-model="selected">
-            <option value="">Choose</option>
-            <option value="a">A</option>
-            <option value="b">B</option>
-        </select>
-        <p>Selected: {{ selected }}</p>
-    </div>
-</template>
-
-// Custom component with v-model
-<template>
-    <div>
-        <custom-input v-model="searchText"></custom-input>
-        <p>Searching for: {{ searchText }}</p>
-    </div>
-</template>
-
-<script>
-const CustomInput = {
-    props: ['modelValue'],
-    emits: ['update:modelValue'],
-    template: \`
-        <input
-            :value="modelValue"
-            @input="\$emit('update:modelValue', \$event.target.value)"
-        >
-    \`
-}
+// Composition API (Vue 3)
+import { ref, onMounted } from 'vue'
 
 export default {
-    components: { CustomInput },
-    data() {
-        return {
-            searchText: ''
-        }
+  setup() {
+    const count = ref(0)
+    
+    function increment() {
+      count.value++
     }
+    
+    onMounted(() => {
+      console.log('Component mounted')
+    })
+    
+    return {
+      count,
+      increment
+    }
+  }
 }
+
+// <script setup> syntax (Vue 3)
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const count = ref(0)
+
+function increment() {
+  count.value++
+}
+
+onMounted(() => {
+  console.log('Component mounted')
+})
+</script>
+
+// TypeScript with Composition API
+<script setup lang="ts">
+import { ref } from 'vue'
+
+interface User {
+  name: string
+  age: number
+}
+
+const user = ref<User>({
+  name: 'John',
+  age: 30
+})
 </script>`,
           },
         },
         {
-          id: "vue-3",
-          title: "3. What are lifecycle hooks in Vue?",
+          id: "vue-2",
+          title:
+            "2. What is the Composition API and how does it differ from the Options API?",
           answer: {
-            text: `Lifecycle hooks are functions that allow you to execute code at specific stages of a component's lifecycle.
+            text: `The Composition API is a new way to organize and reuse code in Vue 3, providing more flexibility than the Options API.
 
-Key points:
-- Hooks allow code execution at specific lifecycle stages
-- created() is good for data fetching
-- mounted() is good for DOM manipulation
-- beforeUnmount() is good for cleanup
-- Each hook has a specific purpose
-- Hooks are called in a specific order`,
-            example: `// Basic lifecycle hooks
+Key differences:
+1. Code Organization:
+   - Options API: Organized by options (data, methods, etc.)
+   - Composition API: Organized by logical concerns
+
+2. Code Reuse:
+   - Options API: Mixins
+   - Composition API: Composable functions
+
+3. TypeScript Support:
+   - Options API: Limited support
+   - Composition API: Better support
+
+4. Performance:
+   - Options API: Slightly larger bundle
+   - Composition API: Better tree-shaking
+
+Benefits of Composition API:
+- Better code organization
+- Better code reuse
+- Better TypeScript support
+- Better testing
+- Better maintainability`,
+            example: `// Options API
 export default {
-    data() {
-        return {
-            message: 'Hello'
-        }
-    },
-    
-    // Before component is created
-    beforeCreate() {
-        console.log('beforeCreate')
-    },
-    
-    // After component is created
-    created() {
-        console.log('created')
-        // Can access data here
-        console.log(this.message)
-    },
-    
-    // Before component is mounted to DOM
-    beforeMount() {
-        console.log('beforeMount')
-    },
-    
-    // After component is mounted to DOM
-    mounted() {
-        console.log('mounted')
-        // Can access DOM here
-        console.log(this.$el)
-    },
-    
-    // Before component is updated
-    beforeUpdate() {
-        console.log('beforeUpdate')
-    },
-    
-    // After component is updated
-    updated() {
-        console.log('updated')
-    },
-    
-    // Before component is destroyed
-    beforeUnmount() {
-        console.log('beforeUnmount')
-    },
-    
-    // After component is destroyed
-    unmounted() {
-        console.log('unmounted')
+  data() {
+    return {
+      count: 0,
+      name: 'John'
     }
+  },
+  computed: {
+    doubleCount() {
+      return this.count * 2
+    }
+  },
+  methods: {
+    increment() {
+      this.count++
+    }
+  },
+  watch: {
+    count(newValue) {
+      console.log('Count changed:', newValue)
+    }
+  }
 }
 
-// Common use cases
+// Composition API
+import { ref, computed, watch } from 'vue'
+
 export default {
-    data() {
-        return {
-            data: null,
-            timer: null
-        }
-    },
+  setup() {
+    const count = ref(0)
+    const name = ref('John')
     
-    created() {
-        // Fetch data when component is created
-        this.fetchData()
-    },
+    const doubleCount = computed(() => count.value * 2)
     
-    mounted() {
-        // Set up event listeners
-        window.addEventListener('resize', this.handleResize)
-        
-        // Start timer
-        this.timer = setInterval(this.updateTime, 1000)
-    },
-    
-    beforeUnmount() {
-        // Clean up
-        window.removeEventListener('resize', this.handleResize)
-        clearInterval(this.timer)
-    },
-    
-    methods: {
-        fetchData() {
-            // API call
-        },
-        handleResize() {
-            // Handle window resize
-        },
-        updateTime() {
-            // Update time
-        }
+    function increment() {
+      count.value++
     }
+    
+    watch(count, (newValue) => {
+      console.log('Count changed:', newValue)
+    })
+    
+    return {
+      count,
+      name,
+      doubleCount,
+      increment
+    }
+  }
+}
+
+// Composable function
+function useCounter() {
+  const count = ref(0)
+  
+  function increment() {
+    count.value++
+  }
+  
+  return {
+    count,
+    increment
+  }
+}
+
+// Using composable
+export default {
+  setup() {
+    const { count, increment } = useCounter()
+    return { count, increment }
+  }
 }`,
           },
         },
         {
-          id: "vue-4",
-          title: "4. What is prop drilling in Vue?",
+          id: "vue-3",
+          title: "3. What is Pinia and how does it compare to Vuex?",
           answer: {
-            text: `Prop drilling is the process of passing props through multiple levels of components. It can make the code harder to maintain.
+            text: `Pinia is Vue 3's official state management library, designed to be simpler and more intuitive than Vuex.
 
-Key points:
-- Prop drilling can make code hard to maintain
-- provide/inject can solve prop drilling
-- Vuex/Pinia can also solve prop drilling
-- Consider component composition
-- Keep props shallow when possible`,
-            example: `// Example of prop drilling
-// Grandparent component
-const Grandparent = {
-    data() {
-        return {
-            user: {
-                name: 'John',
-                age: 30
-            }
+Key features:
+- TypeScript support
+- DevTools support
+- Composition API
+- Modular by design
+- No mutations
+- Better performance
+
+Comparison with Vuex:
+1. Simplicity:
+   - Pinia: Simpler API
+   - Vuex: More complex
+
+2. TypeScript:
+   - Pinia: Better support
+   - Vuex: Limited support
+
+3. Performance:
+   - Pinia: Better
+   - Vuex: Good
+
+4. Bundle size:
+   - Pinia: Smaller
+   - Vuex: Larger
+
+Benefits of Pinia:
+- Simpler API
+- Better TypeScript support
+- Better performance
+- Smaller bundle size
+- Better developer experience`,
+            example: `// Pinia store
+import { defineStore } from 'pinia'
+
+export const useCounterStore = defineStore('counter', {
+  state: () => ({
+    count: 0
+  }),
+  getters: {
+    doubleCount: (state) => state.count * 2
+  },
+  actions: {
+    increment() {
+      this.count++
+    }
+  }
+})
+
+// Using store in component
+<script setup>
+import { useCounterStore } from './stores/counter'
+
+const store = useCounterStore()
+</script>
+
+<template>
+  <div>
+    <p>Count: {{ store.count }}</p>
+    <p>Double: {{ store.doubleCount }}</p>
+    <button @click="store.increment">Increment</button>
+  </div>
+</template>
+
+// TypeScript with Pinia
+import { defineStore } from 'pinia'
+
+interface CounterState {
+  count: number
+}
+
+export const useCounterStore = defineStore('counter', {
+  state: (): CounterState => ({
+    count: 0
+  }),
+  getters: {
+    doubleCount: (state) => state.count * 2
+  },
+  actions: {
+    increment() {
+      this.count++
+    }
+  }
+})`,
+          },
+        },
+        {
+          id: "vue-4",
+          title: "4. What are Vue 3's new features like Teleport and Suspense?",
+          answer: {
+            text: `Vue 3 introduces several new features to improve component composition and handling of async operations.
+
+1. Teleport:
+- Move components to different DOM locations
+- Useful for modals, tooltips, popovers
+- Better accessibility
+- Cleaner component structure
+
+2. Suspense:
+- Handle async components
+- Show loading states
+- Better error handling
+- Nested async components
+
+3. Multiple v-model:
+- Multiple v-model bindings
+- Custom v-model modifiers
+- Better component composition
+- More flexible forms
+
+4. Fragments:
+- Multiple root elements
+- Cleaner templates
+- Better component composition
+- No wrapper elements`,
+            example: `// Teleport example
+<template>
+  <button @click="showModal = true">Show Modal</button>
+  
+  <Teleport to="body">
+    <div v-if="showModal" class="modal">
+      <h2>Modal Title</h2>
+      <p>Modal content</p>
+      <button @click="showModal = false">Close</button>
+    </div>
+  </Teleport>
+</template>
+
+// Suspense example
+<template>
+  <Suspense>
+    <template #default>
+      <AsyncComponent />
+    </template>
+    <template #fallback>
+      <div>Loading...</div>
+    </template>
+  </Suspense>
+</template>
+
+<script setup>
+const AsyncComponent = defineAsyncComponent(() =>
+  import('./AsyncComponent.vue')
+)
+</script>
+
+// Multiple v-model
+<template>
+  <CustomInput
+    v-model:firstName="firstName"
+    v-model:lastName="lastName"
+  />
+</template>
+
+<script setup>
+const firstName = ref('')
+const lastName = ref('')
+</script>
+
+// Custom component with multiple v-model
+<template>
+  <input
+    :value="firstName"
+    @input="$emit('update:firstName', $event.target.value)"
+  >
+  <input
+    :value="lastName"
+    @input="$emit('update:lastName', $event.target.value)"
+  >
+</template>
+
+<script setup>
+defineProps(['firstName', 'lastName'])
+defineEmits(['update:firstName', 'update:lastName'])
+</script>
+
+// Fragments
+<template>
+  <header>Header</header>
+  <main>Main content</main>
+  <footer>Footer</footer>
+</template>`,
+          },
+        },
+        {
+          id: "vue-5",
+          title: "5. How does Vue 3's reactivity system work?",
+          answer: {
+            text: `Vue 3's reactivity system has been completely rewritten to use JavaScript's Proxy API, providing better performance and more predictable behavior.
+
+Key features:
+1. Proxy-based reactivity:
+   - Better performance
+   - More predictable
+   - Better debugging
+   - No need for Vue.set
+
+2. Reactive references:
+   - ref() for primitive values
+   - reactive() for objects
+   - toRef() for object properties
+   - toRefs() for object properties
+
+3. Computed properties:
+   - computed() function
+   - Better performance
+   - Better TypeScript support
+   - Better debugging
+
+4. Watchers:
+   - watch() function
+   - watchEffect() function
+   - Better performance
+   - Better debugging`,
+            example: `// Basic reactivity
+import { ref, reactive, computed, watch } from 'vue'
+
+// Primitive value
+const count = ref(0)
+console.log(count.value) // 0
+
+// Object
+const state = reactive({
+  count: 0,
+  name: 'John'
+})
+console.log(state.count) // 0
+
+// Computed property
+const doubleCount = computed(() => count.value * 2)
+console.log(doubleCount.value) // 0
+
+// Watcher
+watch(count, (newValue, oldValue) => {
+  console.log('Count changed:', newValue)
+})
+
+// Watch effect
+watchEffect(() => {
+  console.log('Count:', count.value)
+})
+
+// TypeScript with reactivity
+interface User {
+  name: string
+  age: number
+}
+
+const user = reactive<User>({
+  name: 'John',
+  age: 30
+})
+
+// toRef and toRefs
+const nameRef = toRef(user, 'name')
+const { age } = toRefs(user)`,
+          },
+        },
+        {
+          id: "vue-6",
+          title:
+            "6. What are Vue 3's best practices for performance optimization?",
+          answer: {
+            text: `Vue 3 provides several features and best practices for optimizing application performance.
+
+1. Component Optimization:
+   - Use v-once for static content
+   - Use v-memo for memoization
+   - Use shallowRef for large objects
+   - Use markRaw for non-reactive objects
+   - Use defineAsyncComponent for code splitting
+
+2. Reactivity Optimization:
+   - Use ref for primitive values
+   - Use shallowRef for large objects
+   - Use markRaw for non-reactive objects
+   - Use computed for derived values
+   - Use watchEffect for side effects
+
+3. Bundle Optimization:
+   - Use tree-shaking
+   - Use code splitting
+   - Use dynamic imports
+   - Use defineAsyncComponent
+   - Use vite for development
+
+4. Rendering Optimization:
+   - Use v-show for frequent toggles
+   - Use v-if for conditional rendering
+   - Use key for list rendering
+   - Use keep-alive for component caching
+   - Use transition for animations`,
+            example: `// Component optimization
+<template>
+  <div>
+    <!-- Static content -->
+    <h1 v-once>{{ title }}</h1>
+    
+    <!-- Memoized content -->
+    <div v-memo="[valueA, valueB]">
+      {{ complexComputation() }}
+    </div>
+    
+    <!-- Shallow ref -->
+    <div>{{ largeObject.value }}</div>
+  </div>
+</template>
+
+<script setup>
+import { shallowRef, markRaw } from 'vue'
+
+// Shallow ref for large object
+const largeObject = shallowRef({
+  // large object
+})
+
+// Non-reactive object
+const nonReactive = markRaw({
+  // object that doesn't need reactivity
+})
+
+// Async component
+const AsyncComponent = defineAsyncComponent(() =>
+  import('./AsyncComponent.vue')
+)
+</script>
+
+// Reactivity optimization
+<script setup>
+import { ref, shallowRef, markRaw, computed } from 'vue'
+
+// Primitive value
+const count = ref(0)
+
+// Large object
+const largeObject = shallowRef({
+  // large object
+})
+
+// Non-reactive object
+const nonReactive = markRaw({
+  // object that doesn't need reactivity
+})
+
+// Computed property
+const doubleCount = computed(() => count.value * 2)
+</script>
+
+// Bundle optimization
+// vite.config.js
+export default {
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['vue', 'pinia']
         }
+      }
+    }
+  }
+}
+
+// Dynamic import
+const module = await import('./module.js')
+
+// Async component
+const AsyncComponent = defineAsyncComponent(() =>
+  import('./AsyncComponent.vue')
+)`,
+          },
+        },
+      ],
     },
-    template: \`
-        <parent :user="user" />
-    \`
+    {
+      id: "typescript",
+      title: "TypeScript",
+      questions: [
+        {
+          id: "ts-1",
+          title: "1. What is TypeScript and what are its key features?",
+          answer: {
+            text: `TypeScript is a strongly typed programming language that builds on JavaScript, adding static type definitions.
+
+Key features:
+1. Static Typing:
+   - Type checking at compile time
+   - Better code quality
+   - Fewer runtime errors
+   - Better IDE support
+
+2. Type Inference:
+   - Automatic type detection
+   - Reduces type annotations
+   - Maintains type safety
+   - Improves developer experience
+
+3. Object-Oriented Features:
+   - Classes and interfaces
+   - Inheritance
+   - Encapsulation
+   - Access modifiers
+
+4. Advanced Types:
+   - Union types
+   - Intersection types
+   - Generics
+   - Type aliases
+
+5. Tooling Support:
+   - Better IDE support
+   - Code completion
+   - Refactoring
+   - Error detection`,
+            example: `// Basic types
+let name: string = 'John';
+let age: number = 30;
+let isActive: boolean = true;
+let numbers: number[] = [1, 2, 3];
+let tuple: [string, number] = ['hello', 10];
+
+// Type inference
+let inferredString = 'Hello'; // TypeScript infers string
+let inferredNumber = 42; // TypeScript infers number
+
+// Interface
+interface User {
+  name: string;
+  age: number;
+  email?: string; // Optional property
 }
 
-// Parent component
-const Parent = {
-    props: ['user'],
-    template: \`
-        <child :user="user" />
-    \`
+// Class
+class Person {
+  private name: string;
+  protected age: number;
+  
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+  
+  public greet(): string {
+    return \`Hello, my name is \${this.name}\`;
+  }
 }
 
-// Child component
-const Child = {
-    props: ['user'],
-    template: \`
-        <grandchild :user="user" />
-    \`
+// Generics
+function identity<T>(arg: T): T {
+  return arg;
 }
 
-// Grandchild component
-const Grandchild = {
-    props: ['user'],
-    template: \`
-        <p>Name: {{ user.name }}</p>
-        <p>Age: {{ user.age }}</p>
-    \`
+// Union types
+type Status = 'active' | 'inactive' | 'pending';
+let status: Status = 'active';
+
+// Intersection types
+interface HasName {
+  name: string;
+}
+interface HasAge {
+  age: number;
+}
+type Person = HasName & HasAge;`,
+          },
+        },
+        {
+          id: "ts-2",
+          title: "2. What are interfaces and type aliases in TypeScript?",
+          answer: {
+            text: `Interfaces and type aliases are two ways to define custom types in TypeScript.
+
+1. Interfaces:
+   - Can be extended
+   - Can be implemented
+   - Can be merged
+   - Better for object shapes
+   - More flexible
+
+2. Type Aliases:
+   - Cannot be extended
+   - Cannot be implemented
+   - Cannot be merged
+   - Better for unions
+   - More concise
+
+Key differences:
+- Interfaces can be reopened
+- Type aliases can use unions
+- Interfaces are more common
+- Type aliases are more flexible
+- Both can be used with generics`,
+            example: `// Interface
+interface User {
+  name: string;
+  age: number;
+  email?: string;
 }
 
-// Solution using provide/inject
-// Grandparent component
-const Grandparent = {
-    data() {
-        return {
-            user: {
-                name: 'John',
-                age: 30
-            }
-        }
-    },
-    provide() {
-        return {
-            user: this.user
-        }
-    },
-    template: \`
-        <parent />
-    \`
+// Extending interface
+interface Employee extends User {
+  employeeId: number;
+  department: string;
 }
 
-// Parent component
-const Parent = {
-    template: \`
-        <child />
-    \`
+// Implementing interface
+class Person implements User {
+  name: string;
+  age: number;
+  
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
 }
 
-// Child component
-const Child = {
-    template: \`
-        <grandchild />
-    \`
+// Type alias
+type Point = {
+  x: number;
+  y: number;
+};
+
+// Union type
+type Status = 'active' | 'inactive' | 'pending';
+
+// Intersection type
+type Admin = User & {
+  permissions: string[];
+};
+
+// Generic interface
+interface Repository<T> {
+  get(id: number): T;
+  save(item: T): void;
 }
 
-// Grandchild component
-const Grandchild = {
-    inject: ['user'],
-    template: \`
-        <p>Name: {{ user.name }}</p>
-        <p>Age: {{ user.age }}</p>
-    \`
+// Generic type alias
+type Callback<T> = (data: T) => void;
+
+// Using both
+interface Config {
+  apiUrl: string;
+  timeout: number;
+}
+
+type ConfigKeys = keyof Config; // 'apiUrl' | 'timeout'`,
+          },
+        },
+        {
+          id: "ts-3",
+          title: "3. What are generics in TypeScript and how to use them?",
+          answer: {
+            text: `Generics in TypeScript allow you to create reusable components that work with multiple types.
+
+Key concepts:
+1. Generic Functions:
+   - Type parameters
+   - Type constraints
+   - Multiple type parameters
+   - Default types
+
+2. Generic Classes:
+   - Class type parameters
+   - Generic methods
+   - Generic properties
+   - Inheritance
+
+3. Generic Interfaces:
+   - Interface type parameters
+   - Generic methods
+   - Generic properties
+   - Implementation
+
+4. Generic Constraints:
+   - Extends keyword
+   - Type constraints
+   - Multiple constraints
+   - Keyof operator
+
+Benefits:
+- Type safety
+- Code reuse
+- Better abstraction
+- Improved maintainability`,
+            example: `// Generic function
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+// Generic function with constraints
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+// Generic class
+class Container<T> {
+  private value: T;
+  
+  constructor(value: T) {
+    this.value = value;
+  }
+  
+  getValue(): T {
+    return this.value;
+  }
+  
+  setValue(value: T): void {
+    this.value = value;
+  }
+}
+
+// Generic interface
+interface Repository<T> {
+  get(id: number): T;
+  save(item: T): void;
+  delete(id: number): void;
+}
+
+// Generic constraints
+interface HasId {
+  id: number;
+}
+
+function updateItem<T extends HasId>(item: T): T {
+  // Can access item.id
+  return item;
+}
+
+// Multiple type parameters
+function pair<T, U>(first: T, second: U): [T, U] {
+  return [first, second];
+}
+
+// Default type parameters
+function createArray<T = string>(length: number, value: T): T[] {
+  return Array(length).fill(value);
+}
+
+// Generic type alias
+type Callback<T> = (data: T) => void;
+
+// Using generics with classes
+class UserRepository implements Repository<User> {
+  get(id: number): User {
+    // Implementation
+    return {} as User;
+  }
+  
+  save(user: User): void {
+    // Implementation
+  }
+  
+  delete(id: number): void {
+    // Implementation
+  }
+}`,
+          },
+        },
+        {
+          id: "ts-4",
+          title: "4. What are utility types in TypeScript?",
+          answer: {
+            text: `Utility types in TypeScript are built-in types that help with common type transformations.
+
+Common utility types:
+1. Partial<T>:
+   - Makes all properties optional
+   - Useful for updates
+   - Creates new type
+   - Preserves original type
+
+2. Required<T>:
+   - Makes all properties required
+   - Opposite of Partial
+   - Creates new type
+   - Preserves original type
+
+3. Pick<T, K>:
+   - Selects specific properties
+   - Creates new type
+   - K is union of keys
+   - Preserves property types
+
+4. Omit<T, K>:
+   - Removes specific properties
+   - Creates new type
+   - K is union of keys
+   - Opposite of Pick
+
+5. Record<K, T>:
+   - Creates object type
+   - K is key type
+   - T is value type
+   - Useful for maps
+
+6. Exclude<T, U>:
+   - Excludes types from union
+   - Creates new type
+   - U is type to exclude
+   - Works with unions
+
+7. Extract<T, U>:
+   - Extracts types from union
+   - Creates new type
+   - U is type to extract
+   - Works with unions`,
+            example: `// Partial
+interface User {
+  name: string;
+  age: number;
+  email?: string;
+}
+
+type PartialUser = Partial<User>;
+// { name?: string; age?: number; email?: string }
+
+// Required
+type RequiredUser = Required<User>;
+// { name: string; age: number; email: string }
+
+// Pick
+type UserName = Pick<User, 'name'>;
+// { name: string }
+
+// Omit
+type UserWithoutAge = Omit<User, 'age'>;
+// { name: string; email?: string }
+
+// Record
+type UserMap = Record<string, User>;
+// { [key: string]: User }
+
+// Exclude
+type NonNullableUser = Exclude<User | null | undefined, null | undefined>;
+// User
+
+// Extract
+type StringOrNumber = string | number | boolean;
+type OnlyStrings = Extract<StringOrNumber, string>;
+// string
+
+// Using utility types
+function updateUser(id: string, changes: Partial<User>): void {
+  // Implementation
+}
+
+function createUser(data: Required<User>): void {
+  // Implementation
+}
+
+function getUserName(user: Pick<User, 'name'>): string {
+  return user.name;
+}
+
+// Combining utility types
+type UserUpdate = Partial<Pick<User, 'name' | 'email'>>;
+// { name?: string; email?: string }`,
+          },
+        },
+        {
+          id: "ts-5",
+          title: "5. What are type guards and how to use them?",
+          answer: {
+            text: `Type guards in TypeScript are expressions that perform runtime checks to narrow down the type of a variable.
+
+Types of type guards:
+1. typeof type guards:
+   - Checks primitive types
+   - Works with typeof operator
+   - Narrow down to specific type
+   - Runtime check
+
+2. instanceof type guards:
+   - Checks class instances
+   - Works with instanceof operator
+   - Narrow down to class type
+   - Runtime check
+
+3. in type guards:
+   - Checks property existence
+   - Works with in operator
+   - Narrow down object type
+   - Runtime check
+
+4. User-defined type guards:
+   - Custom type checking
+   - Returns type predicate
+   - More flexible
+   - Reusable
+
+Benefits:
+- Type safety
+- Better code organization
+- Improved maintainability
+- Better IDE support`,
+            example: `// typeof type guard
+function processValue(value: string | number) {
+  if (typeof value === 'string') {
+    // value is string
+    return value.toUpperCase();
+  } else {
+    // value is number
+    return value.toFixed(2);
+  }
+}
+
+// instanceof type guard
+class Animal {
+  move() {
+    console.log('Moving...');
+  }
+}
+
+class Dog extends Animal {
+  bark() {
+    console.log('Woof!');
+  }
+}
+
+function processAnimal(animal: Animal) {
+  if (animal instanceof Dog) {
+    // animal is Dog
+    animal.bark();
+  } else {
+    // animal is Animal
+    animal.move();
+  }
+}
+
+// in type guard
+interface Bird {
+  fly(): void;
+}
+
+interface Fish {
+  swim(): void;
+}
+
+function processPet(pet: Bird | Fish) {
+  if ('fly' in pet) {
+    // pet is Bird
+    pet.fly();
+  } else {
+    // pet is Fish
+    pet.swim();
+  }
+}
+
+// User-defined type guard
+function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+function processUnknown(value: unknown) {
+  if (isString(value)) {
+    // value is string
+    return value.toUpperCase();
+  }
+  return value;
+}
+
+// Type predicates
+interface Cat {
+  type: 'cat';
+  meow(): void;
+}
+
+interface Dog {
+  type: 'dog';
+  bark(): void;
+}
+
+type Pet = Cat | Dog;
+
+function isCat(pet: Pet): pet is Cat {
+  return pet.type === 'cat';
+}
+
+function processPet(pet: Pet) {
+  if (isCat(pet)) {
+    // pet is Cat
+    pet.meow();
+  } else {
+    // pet is Dog
+    pet.bark();
+  }
 }`,
           },
         },
@@ -7557,88 +8309,512 @@ export async function generateMetadata({ params }) {
       questions: [
         {
           id: "clean-code-1",
-          title: "1. What are clean code practices?",
+          title: "1. What is clean code practices?",
           answer: {
-            text: `Clean code practices are guidelines for writing maintainable and readable code. Here are some key principles:
+            text: `Clean code practices are a set of principles and guidelines that help developers write code that is easy to understand, maintain, and extend. These practices focus on making code more readable, efficient, and robust.
 
 Key principles:
-- Use meaningful names
-- Write small, focused functions
-- Avoid comments when code is self-documenting
-- Handle errors properly
-- Follow consistent formatting
-- Write tests
-- Keep code DRY (Don't Repeat Yourself)
-- Use appropriate design patterns`,
-            example: `// Meaningful Names
-// Bad
-const d = 10; // What does d mean?
-function fn(a, b) { return a + b; }
+1. Meaningful Names:
+   - Use descriptive variable and function names
+   - Avoid abbreviations and acronyms
+   - Use consistent naming conventions
+   - Make names searchable
+   - Use pronounceable names
 
-// Good
-const daysInWeek = 7;
-function calculateSum(num1, num2) { return num1 + num2; }
+2. Functions:
+   - Keep functions small and focused
+   - Do one thing only
+   - Use descriptive names
+   - Limit number of parameters
+   - Avoid side effects
 
-// Functions
-// Bad
+3. Comments:
+   - Write self-documenting code
+   - Use comments only when necessary
+   - Keep comments up to date
+   - Explain why, not what
+   - Avoid redundant comments
+
+4. Formatting:
+   - Use consistent indentation
+   - Follow team conventions
+   - Use blank lines for separation
+   - Keep lines short
+   - Use proper spacing
+
+5. Error Handling:
+   - Use exceptions for exceptional cases
+   - Don't return null
+   - Don't pass null
+   - Use meaningful error messages
+   - Handle errors at appropriate level
+
+6. Testing:
+   - Write testable code
+   - Keep tests clean
+   - One concept per test
+   - Use descriptive test names
+   - Follow FIRST principles
+
+Benefits:
+- Improved readability
+- Easier maintenance
+- Better collaboration
+- Reduced bugs
+- Faster development`,
+            example: `// Bad: Unclear naming and structure
+function p(d) {
+  let r = 0;
+  for (let i = 0; i < d.length; i++) {
+    r += d[i];
+  }
+  return r / d.length;
+}
+
+// Good: Clear naming and structure
+function calculateAverage(numbers: number[]): number {
+  const sum = numbers.reduce((total, num) => total + num, 0);
+  return sum / numbers.length;
+}
+
+// Bad: Long function with multiple responsibilities
 function processUserData(user) {
-    // Too many responsibilities
-    validateUser(user);
-    saveUser(user);
-    sendEmail(user);
-    logActivity(user);
+  // Validate user data
+  if (!user.name || !user.email) {
+    throw new Error('Invalid user data');
+  }
+  
+  // Save to database
+  db.save(user);
+  
+  // Send welcome email
+  emailService.sendWelcomeEmail(user.email);
+  
+  // Log activity
+  logger.log('User created', user);
 }
 
-// Good
-function validateUser(user) {
-    // Single responsibility
-    if (!user.name) throw new Error('Name required');
-    if (!user.email) throw new Error('Email required');
+// Good: Separated responsibilities
+class UserService {
+  constructor(
+    private validator: UserValidator,
+    private repository: UserRepository,
+    private emailService: EmailService,
+    private logger: Logger
+  ) {}
+
+  async createUser(user: User): Promise<void> {
+    this.validator.validate(user);
+    await this.repository.save(user);
+    await this.emailService.sendWelcomeEmail(user.email);
+    this.logger.log('User created', user);
+  }
 }
 
-function saveUser(user) {
-    // Single responsibility
-    database.save(user);
+// Bad: Unclear error handling
+function getUser(id) {
+  const user = db.getUser(id);
+  if (!user) {
+    return null;
+  }
+  return user;
 }
 
-function notifyUser(user) {
-    // Single responsibility
-    emailService.send(user.email, 'Welcome!');
+// Good: Clear error handling
+class UserNotFoundError extends Error {
+  constructor(id: string) {
+    super(\`User with id \${id} not found\`);
+    this.name = 'UserNotFoundError';
+  }
 }
 
-// Comments
-// Bad
-// Check if user is valid
-if (user.age > 18 && user.hasLicense) {
-    // Allow access
-    allowAccess();
+async function getUser(id: string): Promise<User> {
+  const user = await userRepository.findById(id);
+  if (!user) {
+    throw new UserNotFoundError(id);
+  }
+  return user;
 }
 
-// Good
-const isUserValid = user.age > 18 && user.hasLicense;
-if (isUserValid) {
-    allowAccess();
+// Bad: Poor test structure
+test('user test', () => {
+  const user = createUser();
+  expect(user).toBeDefined();
+  expect(user.name).toBe('John');
+  expect(user.email).toBe('john@example.com');
+  expect(user.isActive).toBe(true);
+});
+
+// Good: Clear test structure
+describe('User', () => {
+  describe('creation', () => {
+    it('should create a user with valid data', () => {
+      const user = new User({
+        name: 'John',
+        email: 'john@example.com'
+      });
+      
+      expect(user).toBeInstanceOf(User);
+      expect(user.name).toBe('John');
+      expect(user.email).toBe('john@example.com');
+    });
+    
+    it('should throw error with invalid email', () => {
+      expect(() => {
+        new User({
+          name: 'John',
+          email: 'invalid-email'
+        });
+      }).toThrow(InvalidEmailError);
+    });
+  });
+});`,
+          },
+        },
+        {
+          id: "clean-code-2",
+          title: "2. What is linting and how to configure it?",
+          answer: {
+            text: `Linting is the process of running a program that analyzes code for potential errors, style issues, and other problems. It helps maintain code quality and consistency across a project.
+
+Key aspects of linting:
+1. ESLint Configuration (eslint.config.js):
+   - JavaScript/TypeScript code analysis
+   - Code style enforcement
+   - Error detection
+   - Custom rule configuration
+   - Integration with Prettier
+
+2. Stylelint Configuration (stylelint.config.js):
+   - CSS/SCSS/Less code analysis
+   - Style consistency enforcement
+   - Best practices validation
+   - Custom property validation
+   - Integration with PostCSS
+
+3. Commitlint Configuration (commitlint.config.js):
+   - Git commit message validation
+   - Conventional commit format
+   - Branch naming rules
+   - Commit message templates
+   - Integration with Husky
+
+Benefits:
+- Consistent code style
+- Early error detection
+- Better code quality
+- Automated code review
+- Improved team collaboration`,
+            example: `// eslint.config.js
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    node: true,
+    es2021: true
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'prettier'
+  ],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'react'],
+  rules: {
+    'no-console': 'warn',
+    'react/prop-types': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off'
+  }
+};
+
+// stylelint.config.js
+module.exports = {
+  extends: [
+    'stylelint-config-standard',
+    'stylelint-config-prettier'
+  ],
+  rules: {
+    'color-no-invalid-hex': true,
+    'font-family-no-duplicate-names': true,
+    'unit-no-unknown': true,
+    'property-no-unknown': true
+  }
+};
+
+// commitlint.config.js
+module.exports = {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'type-enum': [
+      2,
+      'always',
+      ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore']
+    ],
+    'type-case': [2, 'always', 'lower-case'],
+    'scope-case': [2, 'always', 'lower-case'],
+    'subject-case': [2, 'always', 'lower-case']
+  }
+};
+
+// package.json scripts
+{
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "stylelint": "stylelint '**/*.{css,scss}'",
+    "stylelint:fix": "stylelint '**/*.{css,scss}' --fix",
+    "prepare": "husky install"
+  }
 }
 
-// Error Handling
-// Bad
-try {
-    processData();
-} catch (e) {
-    console.log(e);
+// .husky/pre-commit
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx lint-staged`,
+          },
+        },
+        {
+          id: "clean-code-3",
+          title: "3. What are SOLID principles?",
+          answer: {
+            text: `SOLID is an acronym for five design principles that help make software designs more understandable, flexible, and maintainable.
+
+1. Single Responsibility Principle (SRP):
+   - A class should have only one reason to change
+   - Each class should have a single responsibility
+   - Improves code organization
+   - Makes code easier to maintain
+   - Reduces coupling
+
+2. Open/Closed Principle (OCP):
+   - Software entities should be open for extension but closed for modification
+   - New functionality should be added by extending existing code
+   - Promotes code reuse
+   - Reduces risk of breaking existing code
+   - Makes code more maintainable
+
+3. Liskov Substitution Principle (LSP):
+   - Subtypes must be substitutable for their base types
+   - Derived classes should extend the base class without changing its behavior
+   - Ensures proper inheritance
+   - Maintains type safety
+   - Promotes code reuse
+
+4. Interface Segregation Principle (ISP):
+   - Clients should not depend on interfaces they don't use
+   - Split large interfaces into smaller, specific ones
+   - Reduces coupling
+   - Improves code organization
+   - Makes code more maintainable
+
+5. Dependency Inversion Principle (DIP):
+   - High-level modules should not depend on low-level modules
+   - Both should depend on abstractions
+   - Promotes loose coupling
+   - Improves testability
+   - Makes code more flexible`,
+            example: `// Bad: Violates SRP
+class User {
+  constructor(private name: string, private email: string) {}
+  
+  saveToDatabase() {
+    // Database logic
+  }
+  
+  sendEmail() {
+    // Email logic
+  }
+  
+  validate() {
+    // Validation logic
+  }
 }
 
-// Good
-try {
-    processData();
-} catch (error) {
-    if (error instanceof ValidationError) {
-        handleValidationError(error);
-    } else if (error instanceof NetworkError) {
-        handleNetworkError(error);
-    } else {
-        handleUnexpectedError(error);
-    }
+// Good: Follows SRP
+class User {
+  constructor(private name: string, private email: string) {}
+}
+
+class UserRepository {
+  save(user: User) {
+    // Database logic
+  }
+}
+
+class EmailService {
+  sendEmail(user: User) {
+    // Email logic
+  }
+}
+
+class UserValidator {
+  validate(user: User) {
+    // Validation logic
+  }
+}
+
+// Bad: Violates OCP
+class Rectangle {
+  constructor(public width: number, public height: number) {}
+  
+  area() {
+    return this.width * this.height;
+  }
+}
+
+class AreaCalculator {
+  calculate(shape: Rectangle) {
+    return shape.area();
+  }
+}
+
+// Good: Follows OCP
+interface Shape {
+  area(): number;
+}
+
+class Rectangle implements Shape {
+  constructor(public width: number, public height: number) {}
+  
+  area() {
+    return this.width * this.height;
+  }
+}
+
+class Circle implements Shape {
+  constructor(public radius: number) {}
+  
+  area() {
+    return Math.PI * this.radius * this.radius;
+  }
+}
+
+class AreaCalculator {
+  calculate(shape: Shape) {
+    return shape.area();
+  }
+}
+
+// Bad: Violates LSP
+class Bird {
+  fly() {
+    // Fly logic
+  }
+}
+
+class Penguin extends Bird {
+  fly() {
+    throw new Error("Penguins can't fly");
+  }
+}
+
+// Good: Follows LSP
+class Bird {
+  move() {
+    // Move logic
+  }
+}
+
+class FlyingBird extends Bird {
+  fly() {
+    // Fly logic
+  }
+}
+
+class Penguin extends Bird {
+  move() {
+    // Swim logic
+  }
+}
+
+// Bad: Violates ISP
+interface Worker {
+  work(): void;
+  eat(): void;
+  sleep(): void;
+}
+
+class Robot implements Worker {
+  work() {
+    // Work logic
+  }
+  eat() {
+    throw new Error("Robots don't eat");
+  }
+  sleep() {
+    throw new Error("Robots don't sleep");
+  }
+}
+
+// Good: Follows ISP
+interface Workable {
+  work(): void;
+}
+
+interface Eatable {
+  eat(): void;
+}
+
+interface Sleepable {
+  sleep(): void;
+}
+
+class Robot implements Workable {
+  work() {
+    // Work logic
+  }
+}
+
+class Human implements Workable, Eatable, Sleepable {
+  work() {
+    // Work logic
+  }
+  eat() {
+    // Eat logic
+  }
+  sleep() {
+    // Sleep logic
+  }
+}
+
+// Bad: Violates DIP
+class UserService {
+  private database: MySQLDatabase;
+  
+  constructor() {
+    this.database = new MySQLDatabase();
+  }
+  
+  saveUser(user: User) {
+    this.database.save(user);
+  }
+}
+
+// Good: Follows DIP
+interface Database {
+  save(user: User): void;
+}
+
+class UserService {
+  constructor(private database: Database) {}
+  
+  saveUser(user: User) {
+    this.database.save(user);
+  }
+}
+
+class MySQLDatabase implements Database {
+  save(user: User) {
+    // MySQL save logic
+  }
+}
+
+class MongoDBDatabase implements Database {
+  save(user: User) {
+    // MongoDB save logic
+  }
 }`,
           },
         },
