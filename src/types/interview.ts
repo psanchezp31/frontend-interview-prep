@@ -3,7 +3,7 @@ export interface Question {
   title: string;
   answer: {
     text: string;
-    example: string;
+    example?: string;
   };
 }
 
