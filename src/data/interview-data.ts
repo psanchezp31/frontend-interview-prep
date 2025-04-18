@@ -6666,6 +6666,892 @@ const Grandchild = {
       ],
     },
     {
+      id: "nextjs",
+      title: "Next.js",
+      questions: [
+        {
+          id: "next-1",
+          title: "1. What is Server-Side Rendering (SSR) in Next.js?",
+          answer: {
+            text: `Server-Side Rendering (SSR) in Next.js is a rendering method where the HTML for a page is generated on the server for each request. This approach offers several benefits for web applications.
+
+1. SSR Process:
+- Request received by server
+- Server generates HTML
+- HTML sent to client
+- JavaScript hydrated on client
+- Page becomes interactive
+
+2. Benefits of SSR:
+- Better SEO
+- Faster initial page load
+- Improved performance
+- Better user experience
+- Social media sharing
+
+3. Implementation in Next.js:
+- getServerSideProps
+- Server Components
+- API Routes
+- Edge Runtime
+
+4. Use Cases:
+- Dynamic content
+- SEO-critical pages
+- Authentication pages
+- Data-heavy pages`,
+            example: `// Using getServerSideProps
+export async function getServerSideProps(context) {
+  const { params, req, res } = context;
+  
+  // Fetch data from API
+  const response = await fetch('https://api.example.com/data');
+  const data = await response.json();
+
+  return {
+    props: {
+      data
+    }
+  };
+}
+
+// Page component
+function Page({ data }) {
+  return (
+    <div>
+      <h1>Server-Side Rendered Page</h1>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+}
+
+// Server Component
+async function ServerComponent() {
+  const data = await fetchData();
+  
+  return (
+    <div>
+      <h2>Server Component</h2>
+      <p>Data: {data}</p>
+    </div>
+  );
+}
+
+// API Route
+export default function handler(req, res) {
+  res.status(200).json({ message: 'Hello from the server!' });
+}`,
+          },
+        },
+        {
+          id: "next-2",
+          title: "2. What is Client-Side Rendering (CSR) in Next.js?",
+          answer: {
+            text: `Client-Side Rendering (CSR) in Next.js is a rendering method where the HTML is generated in the browser using JavaScript. This approach is suitable for certain types of applications and use cases.
+
+1. CSR Process:
+- Initial HTML sent to client
+- JavaScript downloaded
+- JavaScript executed
+- DOM updated
+- Page becomes interactive
+
+2. Benefits of CSR:
+- Rich interactivity
+- Smooth transitions
+- Better for SPAs
+- Reduced server load
+- Better for dynamic content
+
+3. Implementation in Next.js:
+- Client Components
+- useEffect
+- SWR/React Query
+- Client-side state
+
+4. Use Cases:
+- Interactive UIs
+- Real-time updates
+- Complex state management
+- User-specific content`,
+            example: `// Client Component
+'use client';
+
+function ClientComponent() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch('/api/data');
+      const result = await response.json();
+      setData(result);
+      setLoading(false);
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <h2>Client Component</h2>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+}
+
+// Using SWR for data fetching
+'use client';
+
+function DataComponent() {
+  const { data, error } = useSWR('/api/data', fetcher);
+
+  if (error) return <div>Failed to load</div>;
+  if (!data) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <h2>Data from SWR</h2>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+}
+
+// Client-side state management
+'use client';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}`,
+          },
+        },
+        {
+          id: "next-3",
+          title:
+            "3. What are Server and Client Components and when to use them?",
+          answer: {
+            text: `Next.js 13+ introduces a new component model that distinguishes between Server and Client Components, each serving different purposes in the application architecture.
+
+1. Server Components:
+- Run on the server
+- No client-side JavaScript
+- Access to server resources
+- Better performance
+- Automatic code splitting
+
+2. Client Components:
+- Run in the browser
+- Interactive features
+- Browser APIs
+- State management
+- Event handlers
+
+3. When to use Server Components:
+- Static content
+- Data fetching
+- Backend resources
+- SEO-critical content
+- Performance optimization
+
+4. When to use Client Components:
+- Interactive UI
+- Browser events
+- State management
+- Browser APIs
+- Real-time updates
+
+5. Best Practices:
+- Default to Server Components
+- Use Client Components when needed
+- Minimize client JavaScript
+- Optimize bundle size
+- Follow component hierarchy`,
+            example: `// Server Component (default)
+async function ServerComponent() {
+  const data = await fetchData();
+  
+  return (
+    <div>
+      <h2>Server Component</h2>
+      <p>Data: {data}</p>
+      <ClientComponent />
+    </div>
+  );
+}
+
+// Client Component
+'use client';
+
+function ClientComponent() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}
+
+// Hybrid Approach
+async function ParentComponent() {
+  const data = await fetchData();
+  
+  return (
+    <div>
+      <h1>Server Data: {data}</h1>
+      <ClientComponent initialData={data} />
+    </div>
+  );
+}
+
+'use client';
+
+function ClientComponent({ initialData }) {
+  const [data, setData] = useState(initialData);
+  
+  useEffect(() => {
+    // Client-side updates
+  }, []);
+
+  return (
+    <div>
+      <p>Client-side rendering with initial data</p>
+    </div>
+  );
+}`,
+          },
+        },
+        {
+          id: "next-4",
+          title: "4. How are Server Components rendered in Next.js?",
+          answer: {
+            text: `Server Components in Next.js follow a specific rendering process that optimizes performance and reduces client-side JavaScript.
+
+1. Rendering Process:
+- Server receives request
+- Component tree analyzed
+- Server Components rendered
+- HTML generated
+- Response sent to client
+
+2. Key Features:
+- Streaming
+- Automatic code splitting
+- Zero client JavaScript
+- Server-side execution
+- Optimized bundles
+
+3. Benefits:
+- Faster page loads
+- Smaller JavaScript bundles
+- Better performance
+- Improved SEO
+- Reduced client work
+
+4. Technical Details:
+- React Server Components
+- Server-side execution
+- No client hydration
+- Automatic optimization
+- Streaming support`,
+            example: `// Basic Server Component
+async function ServerComponent() {
+  const data = await fetchData();
+  
+  return (
+    <div>
+      <h2>Server Component</h2>
+      <p>Data: {data}</p>
+    </div>
+  );
+}
+
+// Nested Server Components
+async function ParentComponent() {
+  const data = await fetchData();
+  
+  return (
+    <div>
+      <h1>Parent Component</h1>
+      <ChildComponent data={data} />
+    </div>
+  );
+}
+
+async function ChildComponent({ data }) {
+  const moreData = await fetchMoreData(data.id);
+  
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <p>Data: {moreData}</p>
+    </div>
+  );
+}
+
+// Streaming Server Component
+async function StreamingComponent() {
+  const data = await fetchData();
+  
+  return (
+    <Suspense fallback={<Loading />}>
+      <DataDisplay data={data} />
+    </Suspense>
+  );
+}
+
+// Server Component with Client Component
+async function HybridComponent() {
+  const data = await fetchData();
+  
+  return (
+    <div>
+      <h1>Server Data: {data}</h1>
+      <ClientComponent initialData={data} />
+    </div>
+  );
+}
+
+'use client';
+
+function ClientComponent({ initialData }) {
+  const [data, setData] = useState(initialData);
+  
+  return (
+    <div>
+      <p>Client-side rendering</p>
+    </div>
+  );
+}`,
+          },
+        },
+        {
+          id: "next-5",
+          title:
+            "5. How does Next.js handle data fetching in both client and server?",
+          answer: {
+            text: `Next.js provides multiple ways to fetch data, both on the server and client side, each with its own use cases and benefits.
+
+1. Server-Side Data Fetching:
+- Server Components
+- getServerSideProps
+- Route Handlers
+- Server Actions
+- Edge Runtime
+
+2. Client-Side Data Fetching:
+- Client Components
+- useEffect
+- SWR/React Query
+- Fetch API
+- WebSocket
+
+3. Data Fetching Patterns:
+- Static Generation
+- Server-Side Rendering
+- Incremental Static Regeneration
+- Client-Side Rendering
+- Hybrid Approach
+
+4. Best Practices:
+- Use appropriate method
+- Handle loading states
+- Error handling
+- Caching strategies
+- Performance optimization`,
+            example: `// Server Component Data Fetching
+async function ServerComponent() {
+  const data = await fetch('https://api.example.com/data', {
+    next: { revalidate: 3600 } // Revalidate every hour
+  });
+  
+  return <div>{data}</div>;
+}
+
+// Route Handler (API Route)
+export async function GET(request) {
+  const data = await fetchData();
+  return Response.json(data);
+}
+
+// Client Component Data Fetching
+'use client';
+
+function ClientComponent() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/data');
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  return <div>{data}</div>;
+}
+
+// Using SWR for Client-Side Data Fetching
+'use client';
+
+function DataComponent() {
+  const { data, error } = useSWR('/api/data', fetcher, {
+    refreshInterval: 1000,
+    revalidateOnFocus: true
+  });
+
+  if (error) return <div>Error loading data</div>;
+  if (!data) return <div>Loading...</div>;
+
+  return <div>{data}</div>;
+}
+
+// Hybrid Approach
+async function ParentComponent() {
+  const initialData = await fetchData();
+  
+  return (
+    <div>
+      <h1>Server Data: {initialData}</h1>
+      <ClientComponent initialData={initialData} />
+    </div>
+  );
+}`,
+          },
+        },
+        {
+          id: "next-6",
+          title: "6. How does Next.js handle cache data and revalidating data?",
+          answer: {
+            text: `Next.js provides powerful caching and revalidation mechanisms to optimize performance and ensure data freshness.
+
+1. Caching Strategies:
+- Static Generation
+- Server-Side Rendering
+- Incremental Static Regeneration
+- Route Cache
+- Router Cache
+
+2. Time-Based Revalidation:
+- Revalidate option
+- ISR (Incremental Static Regeneration)
+- Cache duration
+- Stale-while-revalidate
+- Background updates
+
+3. On-Demand Revalidation:
+- revalidatePath
+- revalidateTag
+- Route Handlers
+- Server Actions
+- Manual invalidation
+
+4. Cache Control:
+- Cache headers
+- Cache duration
+- Cache invalidation
+- Cache busting
+- Cache optimization`,
+            example: `// Time-Based Revalidation
+export async function getStaticProps() {
+  const data = await fetchData();
+  
+  return {
+    props: { data },
+    revalidate: 3600 // Revalidate every hour
+  };
+}
+
+// On-Demand Revalidation
+export async function revalidatePath(path) {
+  // Revalidate specific path
+  await fetch('/api/revalidate', {
+    method: 'POST',
+    body: JSON.stringify({ path })
+  });
+}
+
+// Using revalidateTag
+export async function GET() {
+  const data = await fetch('https://api.example.com/data', {
+    next: { tags: ['data'] }
+  });
+  
+  return Response.json(data);
+}
+
+// Server Action with Revalidation
+async function updateData(formData) {
+  'use server';
+  
+  await updateDatabase(formData);
+  revalidatePath('/data');
+  revalidateTag('data');
+}
+
+// Cache Control Headers
+export async function GET() {
+  return new Response(data, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400'
+    }
+  });
+}
+
+// Route Segment Config
+export const revalidate = 3600; // Revalidate every hour
+
+// Dynamic Route Segment Config
+export async function generateStaticParams() {
+  return [{ id: '1' }, { id: '2' }];
+}
+
+export const dynamic = 'force-dynamic'; // Opt out of caching`,
+          },
+        },
+        {
+          id: "next-7",
+          title: "7. What are Server and Client Actions in Next.js?",
+          answer: {
+            text: `Next.js 13+ introduces Server and Client Actions, providing a new way to handle form submissions and data mutations.
+
+1. Server Actions:
+- Run on the server
+- Secure data mutations
+- Form handling
+- API route alternative
+- Database operations
+
+2. Client Actions:
+- Run in the browser
+- Form handling
+- State management
+- User interactions
+- Real-time updates
+
+3. Benefits:
+- Improved security
+- Better performance
+- Simplified code
+- Type safety
+- Progressive enhancement
+
+4. Use Cases:
+- Form submissions
+- Data mutations
+- File uploads
+- Authentication
+- Database operations`,
+            example: `// Server Action
+async function createPost(formData) {
+  'use server';
+  
+  const title = formData.get('title');
+  const content = formData.get('content');
+  
+  await db.posts.create({
+    title,
+    content
+  });
+  
+  revalidatePath('/posts');
+}
+
+// Using Server Action in Form
+function PostForm() {
+  return (
+    <form action={createPost}>
+      <input name="title" />
+      <textarea name="content" />
+      <button type="submit">Create Post</button>
+    </form>
+  );
+}
+
+// Client Action
+'use client';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  
+  const increment = () => {
+    setCount(count + 1);
+  };
+  
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+
+// Hybrid Approach
+async function updateUser(formData) {
+  'use server';
+  
+  const user = await db.users.update({
+    where: { id: formData.get('id') },
+    data: { name: formData.get('name') }
+  });
+  
+  return { success: true, user };
+}
+
+'use client';
+
+function UserForm() {
+  const [status, setStatus] = useState(null);
+  
+  async function handleSubmit(formData) {
+    const result = await updateUser(formData);
+    setStatus(result);
+  }
+  
+  return (
+    <form action={handleSubmit}>
+      <input name="name" />
+      <button type="submit">Update User</button>
+      {status && <p>{status.success ? 'Success' : 'Error'}</p>}
+    </form>
+  );
+}`,
+          },
+        },
+        {
+          id: "next-8",
+          title:
+            "8. What tools does Next.js provide to optimize the application?",
+          answer: {
+            text: `Next.js offers various built-in tools and features to optimize application performance and user experience.
+
+1. Performance Optimization:
+- Image Optimization
+- Font Optimization
+- Script Optimization
+- Route Prefetching
+- Automatic Code Splitting
+
+2. Development Tools:
+- Fast Refresh
+- Error Overlay
+- TypeScript Support
+- ESLint Integration
+- Debugging Tools
+
+3. Build Optimization:
+- Turbopack
+- SWC Compiler
+- Tree Shaking
+- Minification
+- Compression
+
+4. Monitoring and Analytics:
+- Performance Monitoring
+- Error Tracking
+- Analytics Integration
+- Logging
+- Metrics Collection`,
+            example: `// Image Optimization
+import Image from 'next/image';
+
+function OptimizedImage() {
+  return (
+    <Image
+      src="/image.jpg"
+      alt="Description"
+      width={500}
+      height={300}
+      priority
+    />
+  );
+}
+
+// Font Optimization
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
+
+function FontComponent() {
+  return (
+    <div className={inter.className}>
+      Optimized Font
+    </div>
+  );
+}
+
+// Script Optimization
+import Script from 'next/script';
+
+function Analytics() {
+  return (
+    <Script
+      src="https://analytics.example.com/script.js"
+      strategy="afterInteractive"
+    />
+  );
+}
+
+// Route Prefetching
+import Link from 'next/link';
+
+function Navigation() {
+  return (
+    <Link href="/about" prefetch={false}>
+      About
+    </Link>
+  );
+}
+
+// Performance Monitoring
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
+function App() {
+  return (
+    <>
+      <SpeedInsights />
+      {/* App content */}
+    </>
+  );
+}
+
+// Error Tracking
+import { ErrorBoundary } from 'next/error';
+
+function ErrorComponent() {
+  return (
+    <ErrorBoundary>
+      <Component />
+    </ErrorBoundary>
+  );
+}`,
+          },
+        },
+        {
+          id: "next-9",
+          title: "9. What are config-based and file-based metadata in Next.js?",
+          answer: {
+            text: `Next.js provides two ways to define metadata for your application: config-based and file-based metadata.
+
+1. Config-Based Metadata:
+- Static metadata
+- Dynamic metadata
+- Default metadata
+- Route-specific metadata
+- Layout metadata
+
+2. File-Based Metadata:
+- Static files
+- Dynamic files
+- Image files
+- Font files
+- Icon files
+
+3. Metadata Types:
+- Title and description
+- Open Graph
+- Twitter cards
+- Icons and images
+- Robots and sitemap
+
+4. Implementation:
+- Metadata API
+- File conventions
+- Dynamic generation
+- Static generation
+- Hybrid approach`,
+            example: `// Config-Based Metadata
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'My App',
+  description: 'My App Description',
+  openGraph: {
+    title: 'My App',
+    description: 'My App Description',
+    images: ['/og-image.jpg']
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'My App',
+    description: 'My App Description',
+    images: ['/twitter-image.jpg']
+  }
+};
+
+// Dynamic Metadata
+export async function generateMetadata({ params }) {
+  const data = await fetchData(params.id);
+  
+  return {
+    title: data.title,
+    description: data.description
+  };
+}
+
+// File-Based Metadata
+// app/favicon.ico
+// app/icon.png
+// app/opengraph-image.png
+// app/twitter-image.png
+// app/robots.txt
+// app/sitemap.xml
+
+// Layout Metadata
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head>
+        <title>My App</title>
+        <meta name="description" content="My App Description" />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+
+// Route-Specific Metadata
+export const metadata = {
+  title: 'About Page',
+  description: 'About Page Description'
+};
+
+// Dynamic Route Metadata
+export async function generateMetadata({ params }) {
+  return {
+    title: \`Post \${params.id}\`,
+    description: \`Description for post \${params.id}\`
+  };
+}`,
+          },
+        },
+      ],
+    },
+    {
       id: "clean-code",
       title: "Clean Code Practices",
       questions: [
