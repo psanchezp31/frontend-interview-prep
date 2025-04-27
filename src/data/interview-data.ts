@@ -7517,11 +7517,12 @@ person = { name: "Charlie", age: 25 };  // Error: Cannot assign to 'person' beca
             text: `Server-Side Rendering (SSR) in Next.js is a rendering method where the HTML for a page is generated on the server for each request. This approach offers several benefits for web applications.
 
 1. SSR Process:
-- Request received by server
-- Server generates HTML
-- HTML sent to client
-- JavaScript hydrated on client
-- Page becomes interactive
+- User makes a request (e.g., clicks a link or enters a URL).
+- Server processes the request
+- Full HTML is generated on the server
+- HTML is sent to the browser
+- JavaScript bundles are loaded
+- User interacts
 
 2. Benefits of SSR:
 - Better SEO
@@ -7591,11 +7592,11 @@ export default function handler(req, res) {
             text: `Client-Side Rendering (CSR) in Next.js is a rendering method where the HTML is generated in the browser using JavaScript. This approach is suitable for certain types of applications and use cases.
 
 1. CSR Process:
-- Initial HTML sent to client
-- JavaScript downloaded
-- JavaScript executed
-- DOM updated
-- Page becomes interactive
+- User requests a page (e.g., clicks a link or enters a URL).
+- Server responds with a minimal HTML file.
+- Browser loads the JavaScript bundle (React app, for example).
+ -React takes over and uses JavaScript to build the DOM inside the <div id="root">.
+- App becomes interactive — now users can click, scroll, navigate, etc.
 
 2. Benefits of CSR:
 - Rich interactivity
@@ -8390,6 +8391,109 @@ export async function generateMetadata({ params }) {
 }`,
           },
         },
+        {
+          id: "next-10",
+          title: "10. Why is SSR Better for SEO?",
+          answer: {
+            text: `SSR (Server-Side Rendering) is better for SEO because the server sends a fully rendered HTML page to the browser right away, before any JavaScript has to run.
+
+That means:
+
+- Search engine crawlers (like Googlebot) immediately see the full page content.
+- Titles, meta tags, text, links — everything is there instantly.
+- No need to wait for JavaScript to load and render the page (which sometimes crawlers don't handle perfectly, especially on slower sites).
+
+Without SSR (just client-side rendering):
+- The server sends a blank HTML shell.
+- The browser has to download and run JavaScript to "build" the page.
+- If a crawler tries to index the page before the JS finishes, it might miss important content (bad for SEO).`,
+          },
+        },
+        {
+          id: "next-11",
+          title:
+            "11. What do you think about next vs vue, which one is better?",
+          answer: {
+            text: `I think both Next.js and Vue are powerful, but they serve slightly different audiences and project types.
+Next.js, being built on top of React, is fantastic for server-side rendering, static site generation, and has a very mature ecosystem, especially when combined with Vercel for deployments. It's a great fit for highly interactive applications where SEO, performance, and scalability are important.
+
+Vue, and particularly frameworks like Nuxt.js (which is similar to Next.js but for Vue), offers a more approachable learning curve, a very clean structure, and can be an excellent choice for teams that want faster onboarding or that value the simplicity of Vue's reactive system.
+
+Which one is better really depends on the team, the project, and the goals. If a project already has a React ecosystem or needs deep integrations with tools commonly built for React, Next.js is usually the better choice. If the team prefers Vue’s simpler syntax and faster ramp-up time, or if the project is more content-focused, Vue (or Nuxt) might be a better fit.
+`,
+          },
+        },
+        {
+          id: "next-12",
+          title:
+            "12. What is the the difference between getServerSideProps and getStaticProps?",
+          answer: {
+            text: `1. getServerSideProps (SSR – Server-Side Rendering):
+
+- Runs at every request.
+- Always fetches fresh data when someone visits the page.
+- Good for dynamic content that changes often (e.g., dashboards, user profiles, stock prices).
+- Slower than static because it needs to hit the server on every page load.
+- Runs only on the server.
+
+2. getStaticProps (SSG – Static Site Generation):
+- Runs at build time (when you deploy/build your app).
+- Generates a static HTML page ahead of time.
+- Very fast for users — no server processing needed on request.
+- Good for content that doesn’t change often (e.g., blogs, landing pages, marketing pages).
+- If data changes, you need to rebuild the site (unless you use revalidation).
+`,
+            example: `// getServerSideProps
+export async function getServerSideProps(context) {
+  const res = await fetch('https://api.example.com/data');
+  const data = await res.json();
+
+  return { props: { data } };
+}
+
+// getStaticProps
+export async function getStaticProps() {
+  const res = await fetch('https://api.example.com/data');
+  const data = await res.json();
+
+  return { props: { data } };
+}
+`,
+          },
+        },
+        {
+          id: "next-13",
+          title:
+            "13. What is the difference between Server Components and getServerSideProps?",
+          answer: {
+            text: `🔵 getServerSideProps (Pages Router, Next.js 12/13/14):
+
+-You are still writing a traditional Client Component (a React component that runs in the browser).
+- You fetch the data separately through getServerSideProps, and Next.js injects it into the page props.
+- Runs only at request time — always fresh, but can cause slower performance.
+- You manually separate your data fetching and your page rendering.
+
+🟣 Server Components (App Router, Next.js 13/14):
+
+- React Server Components (RSC) allow your component itself to run on the server.
+- You can fetch data directly inside the component, no need for getServerSideProps.
+- The server renders the component to HTML, sends it to the client.
+- It's much more efficient because only the minimal necessary code is sent to the client.
+- Server Components can be streamed, improving performance even more.
+`,
+            example: `⚡ Key difference:
+
+| Feature                    | getServerSideProps                | Server Components              |
+|----------------------------|-----------------------------------|--------------------------------|
+| Data fetching              | Separate function                 | Directly inside component      |
+| Rendered where             | Server                            | Server                         |
+| Transport to client        | JSON (hydrated props)             | Streamed HTML + minimal data   |
+| Client JS bundle           | Bigger (full hydration)           | Smaller (partial hydration)    |
+| Requires Pages Router?     | Yes                               | No (App Router only)           |
+| Streaming support          | No                                | Yes (with RSC)                 |
+`,
+          },
+        },
       ],
     },
     {
@@ -8989,3 +9093,5 @@ fetch('https://api.example.com/users/1', {
     },
   ],
 };
+
+//ADD BUNDLE
