@@ -7415,6 +7415,95 @@ function processPet(pet: Pet) {
 }`,
           },
         },
+        {
+          id: "ts-6",
+          title:
+            "6. What are type assertions in TypeScript, and when should you use them?",
+          answer: {
+            text: `Type assertions allow you to tell TypeScript that a value is of a specific type. It is a way to override TypeScript's inferred type when you are confident that the value will be of a certain type. In essence, you're saying, "I know more about this value than TypeScript does."
+1. When Should You Use Type Assertions?
+- When TypeScript doesn’t know the type, but you're confident about what it is.
+- When dealing with third-party code where TypeScript might not have full type information (e.g., libraries without type definitions).
+- For DOM manipulations: Sometimes when working with elements like document.getElementById() (which returns HTMLElement | null), you might assert that it won't be null.
+
+2. How to Use Type Assertions
+- Use the as keyword for type assertions.
+- Use the angle brackets (e.g., <Type>value) for type assertions.`,
+            example: `// Using as keyword
+let strLength: number = (someValue as string).length;
+
+// Using angle brackets
+let strLength: number = (<string>someValue).length;
+`,
+          },
+        },
+        {
+          id: "ts-7",
+          title:
+            "7. What is the difference between null and undefined in TypeScript, and how does TypeScript handle them?",
+          answer: {
+            text: ` - undefined: This is the default value assigned to variables that are declared but not initialized. It can also be the value of a function that doesn't return anything. Essentially, it means "not assigned" or "missing value."
+- null: This represents the intentional absence of any object value. It is used when you explicitly want to indicate that a variable should have no value.
+
+1. How TypeScript Handles null and undefined:
+
+TypeScript has special handling of null and undefined, especially with the strictNullChecks flag.
+
+- With strictNullChecks enabled (recommended in most cases):
+
+  - null and undefined are treated as distinct types from other types.
+
+  - A variable that can hold null or undefined must explicitly allow it.
+
+  - TypeScript will not allow you to assign null or undefined to a variable unless you specifically allow it.
+`,
+            example: `// Example of strictNullChecks
+let x: string;
+x = null; // Error: Type 'null' is not assignable to type 'string | null'.
+
+let y: string | undefined;
+y = undefined; // This is allowed.
+`,
+          },
+        },
+        {
+          id: "ts-8",
+          title: "8. What is the never type in TypeScript?",
+          answer: {
+            text: `The never type is a special type in TypeScript used to represent values that never occur. It is the opposite of void in TypeScript.
+
+- void represents the absence of a return value, meaning a function does not return anything.
+
+- never, on the other hand, represents values that should never happen, such as when a function throws an error, enters an infinite loop, or never completes successfully.
+ `,
+            example: `// Example of never type
+function throwError(message: string): never {
+  throw new Error(message);  // Function never completes because it throws an error
+}`,
+          },
+        },
+        {
+          id: "ts-9",
+          title:
+            "9. What are the differences between const and let in TypeScript? How does TypeScript treat these in terms of type inference?",
+          answer: {
+            text: ` - let:
+-Mutable: When you declare a variable using let, the value of that variable can be reassigned later.
+- Block-scoped: The variable is only accessible within the block of code where it’s defined (for example, inside a loop or a function).
+
+- const:
+- Immutable binding: A variable declared with const cannot be reassigned after its initial assignment. It does not make the value itself immutable, just the variable binding (i.e., the reference to the value).
+- Block-scoped: Similar to let, const is also block-scoped.
+
+1. Immutability with const
+While const ensures that the reference to the value cannot change, it does not make the value itself immutable. This is an important distinction:
+`,
+            example: `// Example of const with objects
+const person = { name: "Alice", age: 30 };
+person.name = "Bob";  // Allowed! The object itself is mutable
+person = { name: "Charlie", age: 25 };  // Error: Cannot assign to 'person' because it is a constant;`,
+          },
+        },
       ],
     },
     {
