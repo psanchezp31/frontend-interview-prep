@@ -7541,7 +7541,14 @@ person = { name: "Charlie", age: 25 };  // Error: Cannot assign to 'person' beca
 - Dynamic content
 - SEO-critical pages
 - Authentication pages
-- Data-heavy pages`,
+- Data-heavy pages
+
+🔥Challenges with SSR:
+Server load: Since the server has to generate the full HTML for each request, it can increase the load on the server, especially for pages with heavy or complex rendering.
+
+Latency: The server needs to process the request and render the page before sending it to the client, which can add some delay compared to CSR (especially for dynamic pages with lots of data fetching).
+
+Complexity: SSR requires setting up a server to handle the rendering and might involve additional configuration for data fetching, state management, and routing.`,
             example: `// Using getServerSideProps
 export async function getServerSideProps(context) {
   const { params, req, res } = context;
@@ -9014,11 +9021,11 @@ class MongoDBDatabase implements Database {
       ],
     },
     {
-      id: "rest-api",
-      title: "REST API",
+      id: "general-concepts",
+      title: "General Concepts",
       questions: [
         {
-          id: "rest-1",
+          id: "general-concepts-1",
           title: "1. What is a REST API?",
           answer: {
             text: `REST (Representational State Transfer) is an architectural style for designing networked applications. A REST API is an API that follows REST principles.
@@ -9089,9 +9096,14 @@ fetch('https://api.example.com/users/1', {
 }`,
           },
         },
+        {
+          id: "general-concepts-2",
+          title: "2. What is bundle?",
+          answer: {
+            text: `A bundle is a single file (or a set of files) containing all your JavaScript code (and sometimes other assets like CSS, images, and fonts) that has been combined and minified into one (or more) file(s). It’s generated during the build process of your web application. Webpack, Vite are some of the tools that can be used to create bundles.`,
+          },
+        },
       ],
     },
   ],
 };
-
-//ADD BUNDLE
